@@ -1,0 +1,130 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package images.animations;
+
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
+/**
+ *
+ * @author jorge matte
+ */
+public class Animation {
+    private int x;
+    private int y;
+    private final BufferedImage[] images;
+    private Image backgroundImage;
+    private float imageSize;
+    private float rotation;
+    private float backgroundSize; 
+    
+    
+    
+    private int spriteAmount;
+    private int current;
+    private int animationLap;
+    private int lapCount;
+    private final int lapTimes[][];
+    private boolean ended;
+
+    public Animation(final BufferedImage[] parImages) {
+        images = parImages;
+        spriteAmount = parImages.length;
+        lapTimes = new int[parImages.length][2];
+        for (int i = 0; i < lapTimes.length; i++) {
+            lapTimes[i][0]=3;
+            lapTimes[i][1]= i==lapTimes.length-1 ? 0 : i+1;
+        }
+        current = 0;
+        lapCount = 0;
+        animationLap = 3;
+        ended = false;
+        imageSize = 1;
+        backgroundImage = null;
+        backgroundSize = 1;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public float getImageSize() {
+        return imageSize;
+    }
+
+    public void setImageSize(float imageSize) {
+        this.imageSize = imageSize;
+    }
+
+    public float getBackgroundSize() {
+        return backgroundSize;
+    }
+
+    public void setBackgroundSize(float backgroundSize) {
+        this.backgroundSize = backgroundSize;
+    }
+
+    public float getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
+    }
+
+    public Image getBackgroundImage() {
+        return backgroundImage;
+    }
+
+    public void setBackgroundImage(Image backgroundImage) {
+        this.backgroundImage = backgroundImage;
+    }
+
+    public int getAnimationLap() {
+        return animationLap;
+    }
+
+    public void setAnimationLap(int animationLap) {
+        this.animationLap = animationLap;
+    }
+    
+    public BufferedImage getImage()
+    {
+        return images[current];
+    }
+    
+    public void thickAnimation()
+    {
+        lapCount++;
+        if(lapCount > animationLap)
+        {
+            current++;
+            lapCount = 0;
+        }
+        if(current >= spriteAmount)
+        {
+            ended = true;
+        }
+    }
+
+    public boolean isEnded() {
+        return ended;
+    }
+    
+}
