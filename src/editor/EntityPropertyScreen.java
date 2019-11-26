@@ -9,6 +9,7 @@ import bodies.Body;
 import bodies.MovingBody;
 import editor.controller.EntityClicker;
 import images.GameImages;
+import images.animations.GameAnimations;
 import java.awt.Color;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -39,8 +40,15 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
         txtParalax.setText(String.valueOf(entity.getParalax()));
         this.entityClicker = entityClicker;
         this.bodies = bodies;
+
         chkAffectedByGravity.setVisible(false);
+        cmbStandingAnimation.setVisible(false);
+        chkFallingAnimation.setVisible(false);
+        cmbFallingAnimation.setVisible(false);
+        chkMovingAnimation.setVisible(false);
+        cmbMovingAnimation.setVisible(false);
         btnMakePlayer.setVisible(false);
+
         if (entity.getBody() != null) {
             this.body = entity.getBody();
             pnlBody.setVisible(true);
@@ -53,6 +61,7 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
             pnlBody.setVisible(false);
         }
         loadImageDropDown();
+        loadAnimationsDropDown();
         enableSelect = true;
     }
 
@@ -74,6 +83,12 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
         btnDeleteBody = new javax.swing.JButton();
         chkAffectedByGravity = new javax.swing.JCheckBox();
         btnMakePlayer = new javax.swing.JButton();
+        chkStandingAnimation = new javax.swing.JCheckBox();
+        cmbStandingAnimation = new javax.swing.JComboBox<>();
+        chkMovingAnimation = new javax.swing.JCheckBox();
+        cmbMovingAnimation = new javax.swing.JComboBox<>();
+        chkFallingAnimation = new javax.swing.JCheckBox();
+        cmbFallingAnimation = new javax.swing.JComboBox<>();
         btnAddBody = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -129,14 +144,36 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
             }
         });
 
+        chkStandingAnimation.setText("Standing Animation");
+        chkStandingAnimation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkStandingAnimationActionPerformed(evt);
+            }
+        });
+
+        chkMovingAnimation.setText("Moving Animation");
+
+        chkFallingAnimation.setText("Falling Animation");
+
         javax.swing.GroupLayout pnlBodyLayout = new javax.swing.GroupLayout(pnlBody);
         pnlBody.setLayout(pnlBodyLayout);
         pnlBodyLayout.setHorizontalGroup(
             pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlBodyLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnDeleteBody)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 162, Short.MAX_VALUE)
+            .addGroup(pnlBodyLayout.createSequentialGroup()
+                .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chkMovingAnimation)
+                    .addComponent(chkFallingAnimation))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(pnlBodyLayout.createSequentialGroup()
+                .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(cmbFallingAnimation, javax.swing.GroupLayout.Alignment.LEADING, 0, 131, Short.MAX_VALUE)
+                    .addComponent(cmbMovingAnimation, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlBodyLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnDeleteBody))
+                    .addComponent(chkStandingAnimation, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbStandingAnimation, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
                 .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnMakePlayer)
                     .addComponent(chkAffectedByGravity)
@@ -150,11 +187,26 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
                 .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDeleteBody)
                     .addComponent(chkMovingBody))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkAffectedByGravity)
+                .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlBodyLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(chkAffectedByGravity)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnMakePlayer))
+                    .addGroup(pnlBodyLayout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(chkStandingAnimation)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbStandingAnimation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnMakePlayer)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addComponent(chkMovingAnimation)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbMovingAnimation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(chkFallingAnimation)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbFallingAnimation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(167, Short.MAX_VALUE))
         );
 
         btnAddBody.setText("Add Body");
@@ -172,19 +224,19 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnlBody, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtParalax, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cmbImagenes, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cmbImagenes, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAddBody)
+                        .addGap(0, 352, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addComponent(btnAddBody)
+                .addComponent(pnlBody, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -196,11 +248,11 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
                     .addComponent(txtParalax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbImagenes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAddBody)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlBody, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addComponent(pnlBody, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -254,9 +306,7 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
                 bodies.add(newMovingBody);
                 chkAffectedByGravity.setVisible(true);
                 btnMakePlayer.setVisible(true);
-            }
-            else
-            {
+            } else {
                 bodies.remove(body);
                 Body newBody = new Body();
                 newBody.setShape(entity);
@@ -272,20 +322,38 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
     private void chkAffectedByGravityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkAffectedByGravityActionPerformed
         if (enableSelect) {
             if (chkAffectedByGravity.isSelected()) {
-                ((MovingBody)body).setAfectedByGravity(true);
-            }
-            else
-            {
-                ((MovingBody)body).setAfectedByGravity(false);
+                ((MovingBody) body).setAfectedByGravity(true);
+            } else {
+                ((MovingBody) body).setAfectedByGravity(false);
             }
         }
     }//GEN-LAST:event_chkAffectedByGravityActionPerformed
 
     private void btnMakePlayerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMakePlayerActionPerformed
         if (enableSelect) {
-            frameReference.setPlayer((MovingBody)this.body);
+            frameReference.setPlayer((MovingBody) this.body);
         }
     }//GEN-LAST:event_btnMakePlayerActionPerformed
+
+    private void chkStandingAnimationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkStandingAnimationActionPerformed
+        if(chkStandingAnimation.isSelected())
+        {
+            cmbFallingAnimation.setVisible(true);
+            if(entity.getBody() != null)
+            {
+                entity.getBody().setStandingAnimation(GameAnimations.getAnimation((String)cmbStandingAnimation.getSelectedItem()));
+                System.out.println("set!");
+            }
+        }
+        else
+        {
+            cmbFallingAnimation.setVisible(false);
+            if(entity.getBody() != null)
+            {
+                entity.getBody().setStandingAnimation(null);
+            }
+        }
+    }//GEN-LAST:event_chkStandingAnimationActionPerformed
 
     private final void loadImageDropDown() {
         List<String> imageNames = GameImages.getImagesNames();
@@ -299,14 +367,51 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
         cmbImagenes.setModel(model);
     }
 
+    private final void loadAnimationsDropDown() {
+        List<String> animationNames = GameAnimations.getImagesNames();
+        DefaultComboBoxModel<String> fallingModel = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<String> standingModel = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<String> movingModel = new DefaultComboBoxModel<>();
+        for (String animationName : animationNames) {
+            fallingModel.addElement(animationName);
+            standingModel.addElement(animationName);
+            movingModel.addElement(animationName);
+            if (entity.getBody() != null) {
+                if (entity.getBody().getStandingAnimation() != null
+                        && animationName.equals(GameAnimations.getImageName(entity.getBody().getStandingAnimation()))) {
+                    standingModel.setSelectedItem(animationName);
+                }
+                if (entity.getBody() instanceof MovingBody) {
+                    if (((MovingBody) entity.getBody()).getMovingAnimation() != null
+                            && animationName.equals(GameAnimations.getImageName(((MovingBody) entity.getBody()).getMovingAnimation()))) {
+                        movingModel.setSelectedItem(animationName);
+                    }
+                    if (((MovingBody) entity.getBody()).getFallingAnimation() != null
+                            && animationName.equals(GameAnimations.getImageName(((MovingBody) entity.getBody()).getFallingAnimation()))) {
+                        fallingModel.setSelectedItem(animationName);
+                    }
+                }
+            }
+        }
+        cmbStandingAnimation.setModel(standingModel);
+        cmbMovingAnimation.setModel(movingModel);
+        cmbFallingAnimation.setModel(fallingModel);
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddBody;
     private javax.swing.JButton btnDeleteBody;
     private javax.swing.JButton btnMakePlayer;
     private javax.swing.JCheckBox chkAffectedByGravity;
+    private javax.swing.JCheckBox chkFallingAnimation;
+    private javax.swing.JCheckBox chkMovingAnimation;
     private javax.swing.JCheckBox chkMovingBody;
+    private javax.swing.JCheckBox chkStandingAnimation;
+    private javax.swing.JComboBox<String> cmbFallingAnimation;
     private javax.swing.JComboBox<String> cmbImagenes;
+    private javax.swing.JComboBox<String> cmbMovingAnimation;
+    private javax.swing.JComboBox<String> cmbStandingAnimation;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel pnlBody;

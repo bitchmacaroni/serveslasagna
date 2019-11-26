@@ -14,15 +14,18 @@ import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.awt.image.RGBImageFilter;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
@@ -34,8 +37,7 @@ public class GameImages {
 
     private static ImageFilter filter;
     private static ArrayList<GameImage> images = new ArrayList<>();
-    
-    
+
     /*
     private static Image lazer;
     private static Image lazer2;
@@ -58,7 +60,6 @@ public class GameImages {
     
     private static Image burningFuel;
      */
-
     private static Image guy;
 
     private static BufferedImage[] explosion;
@@ -76,16 +77,18 @@ public class GameImages {
                 }
             }
         };
-        
+
         Path dir = Paths.get("");
         System.out.println("getting path");
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.png")) {
+        try ( DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.png")) {
             for (Path file : stream) {
                 System.out.println(file.getFileName().toString());
-                ImageProducer filteredImgProd = new FilteredImageSource(new ImageIcon(file.getFileName().toString()).getImage().getSource(), filter);
-                Image image = Toolkit.getDefaultToolkit().createImage(filteredImgProd);
-                GameImage gameImage = new GameImage(image, file.getFileName().toString());
-                images.add(gameImage);
+                if (!file.getFileName().toString().toLowerCase().contains("animation")) {
+                    ImageProducer filteredImgProd = new FilteredImageSource(new ImageIcon(file.getFileName().toString()).getImage().getSource(), filter);
+                    Image image = Toolkit.getDefaultToolkit().createImage(filteredImgProd);
+                    GameImage gameImage = new GameImage(image, file.getFileName().toString());
+                    images.add(gameImage);
+                }
             }
         }
         /*
@@ -241,29 +244,24 @@ public class GameImages {
         return meteor;
     }
      */
-    
-    public static Image getImage(String name)
-    {
+    public static Image getImage(String name) {
         for (GameImage image : images) {
-            if(name.equals(image.getName()))
-            {
+            if (name.equals(image.getName())) {
                 return image.getImage();
             }
         }
         return null;
     }
-    
-    public static ArrayList<String> getImagesNames()
-    {
+
+    public static ArrayList<String> getImagesNames() {
         ArrayList<String> names = new ArrayList<>();
         for (GameImage image : images) {
             names.add(image.getName());
         }
         return names;
     }
-    
-    public static String getImageName(Image image)
-    {
+
+    public static String getImageName(Image image) {
         for (GameImage gameImage : images) {
             if (image.equals(gameImage.getImage())) {
                 return gameImage.getName();

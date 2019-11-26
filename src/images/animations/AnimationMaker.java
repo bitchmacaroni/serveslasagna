@@ -18,7 +18,7 @@ import javax.imageio.ImageIO;
  * @author christian
  */
 public class AnimationMaker {
-   
+
     private BufferedImage[] imageSet;
     private String name;
     private int spriteAmount = -1;
@@ -26,86 +26,92 @@ public class AnimationMaker {
     private int yBorderLimit = -1;
     private int filas = 1;
     private int columnas = 1;
-    
-    
 
     public AnimationMaker() {
     }
-    
-    private AnimationMaker withSprites(int amount)
-    {
-        this.spriteAmount = amount;
+
+    public AnimationMaker withSprites(int amount) {
+        if (amount > 0) {
+            this.spriteAmount = amount;
+        }
         return this;
     }
-    
-    private AnimationMaker withName(String name)
-    {
+
+    public AnimationMaker withName(String name) {
         this.name = name;
         return this;
     }
-    
-    private AnimationMaker withXBorder(int limit)
-    {
-        this.xBorderLimit = limit;
+
+    public AnimationMaker withXBorder(int limit) {
+        if (limit > 0) {
+            this.xBorderLimit = limit;
+        }
         return this;
     }
-    
-    private AnimationMaker withYBorder(int limit)
-    {
-        this.yBorderLimit = limit;
+
+    public AnimationMaker withYBorder(int limit) {
+        if (limit > 0) {
+            this.yBorderLimit = limit;
+        }
         return this;
     }
-    
-    private AnimationMaker withBorders(int xLimit, int yLimit)
-    {
-        this.xBorderLimit = xLimit;
-        this.yBorderLimit = yLimit;
+
+    public AnimationMaker withBorders(int xLimit, int yLimit) {
+        if (xLimit > 0) {
+            this.xBorderLimit = xLimit;
+        }
+        if (yLimit > 0) {
+            this.yBorderLimit = yLimit;
+        }
         return this;
     }
-    
-    private AnimationMaker withRowColumns(int row, int columns)
-    {
-        this.columnas = columns;
-        this.filas = row;
+
+    public AnimationMaker withRowColumns(int row, int columns) {
+        if (columns > 0) {
+            this.columnas = columns;
+        }
+        if (row > 0) {
+            this.filas = row;
+        }
         return this;
     }
-    
-    private AnimationMaker withColumns(int columns)
-    {
-        this.columnas = columns;
+
+    public AnimationMaker withColumns(int columns) {
+        if (columns > 0) {
+            this.columnas = columns;
+        }
         return this;
     }
-    
-    private AnimationMaker withRows(int rows)
-    {
-        this.filas = rows;
+
+    public AnimationMaker withRows(int rows) {
+        if (rows > 0) {
+            this.filas = rows;
+        }
         return this;
     }
-    
-    public BufferedImage[] makeAnimation() throws FileNotFoundException, IOException
-    {
-        File file = new File(name); 
+
+    public BufferedImage[] makeAnimation() throws FileNotFoundException, IOException {
+        File file = new File(name);
         FileInputStream fis = new FileInputStream(file);
         BufferedImage image = ImageIO.read(fis); //reading the image file
-        if(spriteAmount == -1)
-        {
-            spriteAmount = filas*columnas;
+        if (spriteAmount == -1) {
+            spriteAmount = filas * columnas;
         }
-        int widthParcial = (xBorderLimit == -1 ? image.getWidth(): xBorderLimit) / columnas;
-        int heightParcial = (yBorderLimit == -1 ? image.getHeight(): yBorderLimit) / filas;
+        int widthParcial = (xBorderLimit == -1 ? image.getWidth() : xBorderLimit) / columnas;
+        int heightParcial = (yBorderLimit == -1 ? image.getHeight() : yBorderLimit) / filas;
         int conteo = 0;
         imageSet = new BufferedImage[spriteAmount];
         for (int y = 0; y < filas; y++) {
             for (int x = 0; x < columnas; x++) {
-                while(conteo < spriteAmount){
+                if(conteo < spriteAmount) {
                     imageSet[conteo] = new BufferedImage(widthParcial, heightParcial, image.getType());
                     Graphics2D gr = imageSet[conteo++].createGraphics();
-                    gr.drawImage(image, 0, 0, widthParcial, heightParcial, widthParcial * x, heightParcial * y, widthParcial * (x+1), heightParcial * (y +1), null);
+                    gr.drawImage(image, 0, 0, widthParcial, heightParcial, widthParcial * x, heightParcial * y, widthParcial * (x + 1), heightParcial * (y + 1), null);
                     gr.dispose();
                 }
             }
         }
         return imageSet;
-        
+
     }
 }

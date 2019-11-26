@@ -17,14 +17,17 @@ import editor.tool.RectangleTool;
 import editor.tool.Tool;
 import editor.tool.TriangleTool;
 import images.GameImages;
+import images.animations.GameAnimations;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,7 +80,8 @@ public class SideScrollerProto extends Canvas implements Runnable {
         frame.setVisible(true);
         try {
             GameImages.loadAllImages();
-        } catch (Exception e) {
+            GameAnimations.LoadAllAnimations();
+        } catch (IOException e) {
             System.out.println("error huge");
         }
         mouseEvents = new GameMouseEvent();
@@ -221,8 +225,19 @@ public class SideScrollerProto extends Canvas implements Runnable {
         tickCount++;
 
         for (Body body : gameBodies) {
+
             if (body instanceof MovingBody) {
                 ((MovingBody) body).move(gameBodies);
+                if (((MovingBody) body).getMovingAnimation() != null) {
+                    ((MovingBody) body).getMovingAnimation().tickAnimation();
+                }
+                if (((MovingBody) body).getFallingAnimation() != null) {
+                    ((MovingBody) body).getMovingAnimation().tickAnimation();
+                }
+            }
+            if (body.getStandingAnimation() != null) {
+                body.getStandingAnimation().tickAnimation();
+                System.out.println("yo!");
             }
         }
 
@@ -301,19 +316,40 @@ public class SideScrollerProto extends Canvas implements Runnable {
         AffineTransform af = AffineTransform.getTranslateInstance(x, y);
         af.scale(scale, scale);
         af.rotate(rotation,/*0/**/ GameImages.getImage("guy.png").getWidth(this) / 2 /**/, /*0/**/ GameImages.getImage("guy.png").getHeight(this) / 2 /**/);
-        g2d.drawImage(GameImages.getImage("guy.png"), af, null);
+        //g2d.drawImage(GameImages.getImage("guy.png"), af, null);
 
         //g2d.drawImage(GameImages.getGuy(), 0, 0, getWidth(), getHeight(), this);
         for (GameShape entity : entities) {
             if (entity.getObjectImage() != null) {
+                Image image = entity.getObjectImage();
+                if (entity.getBody() != null) {
+                    Body body = entity.getBody();
+                    if (body instanceof MovingBody) {
+                        MovingBody mBody = (MovingBody) body;
+                        System.out.println("is still: " + mBody.isStill());
+                        System.out.println("is null: "+(mBody.getStandingAnimation() != null));
+                        System.out.println("both: "+(mBody.getStandingAnimation() != null && mBody.isStill()));
+                        if (mBody.getMovingAnimation() != null && mBody.isMoving()) {
+                            System.out.println("oh no");
+                        } else if (mBody.getFallingAnimation() != null && mBody.isFalling()) {
+                            System.out.println("oh nooo");
+                        } else if (mBody.getStandingAnimation() != null && mBody.isStill()) {
+                            System.out.println("ok");
+                            image = mBody.getStandingAnimation().getImage();
+                        }
+                    } else if (body.getStandingAnimation() != null) {
+                        System.out.println("ok");
+                        image = body.getStandingAnimation().getImage();
+                    }
+                }
                 double x2 = WIDTH * SCALE / 2 + entity.getParalax() * mainCamera.getZoom() * (entity.getX() - mainCamera.getxPos() - entity.getScale() * entity.getWidth() / 2);
                 double y2 = HEIGHT * SCALE / 2 + entity.getParalax() * mainCamera.getZoom() * (entity.getY() - mainCamera.getyPos() - entity.getScale() * entity.getHeight() / 2);
                 double scale2 = (double) mainCamera.getZoom() * entity.getScale();
                 double rotation2 = Math.toRadians(entity.getRotation());
                 AffineTransform af2 = AffineTransform.getTranslateInstance(x2, y2);
-                af2.scale(scale2 * entity.getWidth() / entity.getObjectImage().getWidth(this), scale2 * entity.getHeight() / entity.getObjectImage().getHeight(this));
-                af2.rotate(rotation2, entity.getObjectImage().getWidth(this) / 2, entity.getObjectImage().getHeight(this) / 2);
-                g2d.drawImage(entity.getObjectImage(), af2, null);
+                af2.scale(scale2 * entity.getWidth() / image.getWidth(this), scale2 * entity.getHeight() / image.getHeight(this));
+                af2.rotate(rotation2, image.getWidth(this) / 2, image.getHeight(this) / 2);
+                g2d.drawImage(image, af2, null);
             }
             entity.draw(g2d);
         }
