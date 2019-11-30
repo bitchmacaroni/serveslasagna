@@ -12,12 +12,12 @@ import java.io.IOException;
  *
  * @author christian
  */
-public class AttributeIO<T> {
+public class AttributeIO {
 
     String name;
-    T value;
+    Object value;
 
-    public AttributeIO(String name, T value) {
+    public AttributeIO(String name, Object value) {
         this.name = name;
         this.value = value;
     }

@@ -29,6 +29,7 @@ public class EntityIO<T> {
         while (currentClass != null) {
             for (Field field : currentClass.getDeclaredFields()) {
                 field.setAccessible(true);
+                
                 AttributeIO attribute = new AttributeIO(field.getName(), field.get(entity));
                 attributes.add(attribute);
                 field.setAccessible(false);

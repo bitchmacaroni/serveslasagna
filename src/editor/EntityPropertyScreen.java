@@ -13,6 +13,8 @@ import images.animations.GameAnimations;
 import java.awt.Color;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import shapes.GameShape;
 import sidescrollerproto.SideScrollerProto;
 
@@ -31,6 +33,11 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
 
     /**
      * Creates new form EntityPropertyScreen
+     *
+     * @param entity
+     * @param entityClicker
+     * @param bodies
+     * @param frameReference
      */
     public EntityPropertyScreen(GameShape entity, EntityClicker entityClicker, List<Body> bodies, SideScrollerProto frameReference) {
         enableSelect = false;
@@ -40,6 +47,11 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
         txtParalax.setText(String.valueOf(entity.getParalax()));
         this.entityClicker = entityClicker;
         this.bodies = bodies;
+        txtX.setText(String.valueOf(entity.getX()));
+        txtY.setText(String.valueOf(entity.getY()));
+        txtHeight.setText(String.valueOf(entity.getHeight()));
+        txtWidth.setText(String.valueOf(entity.getWidth()));
+        addListeners();
 
         chkAffectedByGravity.setVisible(false);
         cmbStandingAnimation.setVisible(false);
@@ -90,6 +102,22 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
         chkFallingAnimation = new javax.swing.JCheckBox();
         cmbFallingAnimation = new javax.swing.JComboBox<>();
         btnAddBody = new javax.swing.JButton();
+        lblX = new javax.swing.JLabel();
+        txtX = new javax.swing.JTextField();
+        lblY = new javax.swing.JLabel();
+        txtY = new javax.swing.JTextField();
+        lblWidth = new javax.swing.JLabel();
+        lblHeight = new javax.swing.JLabel();
+        txtWidth = new javax.swing.JTextField();
+        txtHeight = new javax.swing.JTextField();
+        btnIncX = new javax.swing.JButton();
+        btnDecX = new javax.swing.JButton();
+        btnDecY = new javax.swing.JButton();
+        btnIncY = new javax.swing.JButton();
+        btnIncHgt = new javax.swing.JButton();
+        btnDecHgt = new javax.swing.JButton();
+        btnIncWdt = new javax.swing.JButton();
+        btnDecWdt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -160,9 +188,7 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
         pnlBodyLayout.setHorizontalGroup(
             pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBodyLayout.createSequentialGroup()
-                .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chkMovingAnimation)
-                    .addComponent(chkFallingAnimation))
+                .addComponent(chkMovingAnimation)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(pnlBodyLayout.createSequentialGroup()
                 .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -173,12 +199,15 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
                         .addComponent(btnDeleteBody))
                     .addComponent(chkStandingAnimation, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cmbStandingAnimation, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnMakePlayer)
                     .addComponent(chkAffectedByGravity)
                     .addComponent(chkMovingBody))
                 .addGap(15, 15, 15))
+            .addGroup(pnlBodyLayout.createSequentialGroup()
+                .addComponent(chkFallingAnimation)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlBodyLayout.setVerticalGroup(
             pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,13 +235,69 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
                 .addComponent(chkFallingAnimation)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbFallingAnimation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(167, Short.MAX_VALUE))
+                .addContainerGap(131, Short.MAX_VALUE))
         );
 
         btnAddBody.setText("Add Body");
         btnAddBody.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddBodyActionPerformed(evt);
+            }
+        });
+
+        lblX.setText("X:");
+
+        lblY.setText("Y:");
+
+        lblWidth.setText("Width:");
+
+        lblHeight.setText("Height:");
+
+        btnIncX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIncXActionPerformed(evt);
+            }
+        });
+
+        btnDecX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDecXActionPerformed(evt);
+            }
+        });
+
+        btnDecY.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDecYActionPerformed(evt);
+            }
+        });
+
+        btnIncY.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIncYActionPerformed(evt);
+            }
+        });
+
+        btnIncHgt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIncHgtActionPerformed(evt);
+            }
+        });
+
+        btnDecHgt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDecHgtActionPerformed(evt);
+            }
+        });
+
+        btnIncWdt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIncWdtActionPerformed(evt);
+            }
+        });
+
+        btnDecWdt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDecWdtActionPerformed(evt);
             }
         });
 
@@ -223,21 +308,58 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlBody, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtParalax, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAddBody)
+                                .addGap(83, 83, 83)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblWidth)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txtWidth, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblX)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtX)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(btnIncX, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnDecX, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                    .addComponent(btnIncWdt, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnDecWdt, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(10, 10, 10)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtParalax, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cmbImagenes, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnAddBody)
-                        .addGap(0, 352, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbImagenes, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblHeight)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtHeight, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnIncHgt, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(btnDecHgt, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblY)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtY, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnIncY, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(btnDecY, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlBody, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -249,10 +371,50 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
                     .addComponent(cmbImagenes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAddBody)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlBody, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblX)
+                                .addComponent(txtX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnIncX)
+                                .addGap(5, 5, 5)
+                                .addComponent(btnDecX)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblWidth)
+                                .addComponent(txtWidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnIncWdt)
+                                .addGap(5, 5, 5)
+                                .addComponent(btnDecWdt)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pnlBody, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAddBody)
+                                .addGap(9, 9, 9))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblY)
+                                    .addComponent(txtY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnIncY)
+                                        .addGap(5, 5, 5)
+                                        .addComponent(btnDecY)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblHeight)
+                            .addComponent(txtHeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnIncHgt)
+                                .addGap(5, 5, 5)
+                                .addComponent(btnDecHgt)))
+                        .addContainerGap(408, Short.MAX_VALUE))))
         );
 
         pack();
@@ -336,26 +498,85 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMakePlayerActionPerformed
 
     private void chkStandingAnimationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkStandingAnimationActionPerformed
-        if(chkStandingAnimation.isSelected())
-        {
+        if (chkStandingAnimation.isSelected()) {
             cmbFallingAnimation.setVisible(true);
-            if(entity.getBody() != null)
-            {
-                entity.getBody().setStandingAnimation(GameAnimations.getAnimation((String)cmbStandingAnimation.getSelectedItem()));
+            if (entity.getBody() != null) {
+                entity.getBody().setStandingAnimation(GameAnimations.getAnimation((String) cmbStandingAnimation.getSelectedItem()));
                 System.out.println("set!");
             }
-        }
-        else
-        {
+        } else {
             cmbFallingAnimation.setVisible(false);
-            if(entity.getBody() != null)
-            {
+            if (entity.getBody() != null) {
                 entity.getBody().setStandingAnimation(null);
             }
         }
     }//GEN-LAST:event_chkStandingAnimationActionPerformed
 
-    private final void loadImageDropDown() {
+    private void btnIncXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncXActionPerformed
+        try {
+            int value = Integer.parseInt(txtX.getText());
+            txtX.setText(String.valueOf(value+1));
+        } catch (NumberFormatException e) {
+        }
+    }//GEN-LAST:event_btnIncXActionPerformed
+
+    private void btnDecXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDecXActionPerformed
+        try {
+            int value = Integer.parseInt(txtX.getText());
+            txtX.setText(String.valueOf(value-1));
+        } catch (NumberFormatException e) {
+        }
+    }//GEN-LAST:event_btnDecXActionPerformed
+
+    private void btnIncYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncYActionPerformed
+        try {
+            int value = Integer.parseInt(txtY.getText());
+            txtY.setText(String.valueOf(value+1));
+        } catch (NumberFormatException e) {
+        }
+    }//GEN-LAST:event_btnIncYActionPerformed
+
+    private void btnDecYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDecYActionPerformed
+        try {
+            int value = Integer.parseInt(txtY.getText());
+            txtY.setText(String.valueOf(value-1));
+        } catch (NumberFormatException e) {
+        }
+    }//GEN-LAST:event_btnDecYActionPerformed
+
+    private void btnIncWdtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncWdtActionPerformed
+        try {
+            int value = Integer.parseInt(txtWidth.getText());
+            txtWidth.setText(String.valueOf(value+1));
+        } catch (NumberFormatException e) {
+        }
+    }//GEN-LAST:event_btnIncWdtActionPerformed
+
+    private void btnDecWdtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDecWdtActionPerformed
+        try {
+            int value = Integer.parseInt(txtWidth.getText());
+            txtWidth.setText(String.valueOf(value-1));
+        } catch (NumberFormatException e) {
+        }
+    }//GEN-LAST:event_btnDecWdtActionPerformed
+
+    private void btnIncHgtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncHgtActionPerformed
+        try {
+            int value = Integer.parseInt(txtHeight.getText());
+            txtHeight.setText(String.valueOf(value+1));
+        } catch (NumberFormatException e) {
+        }
+    }//GEN-LAST:event_btnIncHgtActionPerformed
+
+    private void btnDecHgtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDecHgtActionPerformed
+        try {
+            int value = Integer.parseInt(txtHeight.getText());
+            txtHeight.setText(String.valueOf(value-1));
+        } catch (NumberFormatException e) {
+        }
+    }//GEN-LAST:event_btnDecHgtActionPerformed
+
+    private void loadImageDropDown() {
         List<String> imageNames = GameImages.getImagesNames();
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         for (String imageName : imageNames) {
@@ -367,7 +588,7 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
         cmbImagenes.setModel(model);
     }
 
-    private final void loadAnimationsDropDown() {
+    private void loadAnimationsDropDown() {
         List<String> animationNames = GameAnimations.getImagesNames();
         DefaultComboBoxModel<String> fallingModel = new DefaultComboBoxModel<>();
         DefaultComboBoxModel<String> standingModel = new DefaultComboBoxModel<>();
@@ -397,11 +618,118 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
         cmbMovingAnimation.setModel(movingModel);
         cmbFallingAnimation.setModel(fallingModel);
     }
+    
+    private void addListeners()
+    {
+        txtX.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent arg0) {
+                changeX(txtX.getText());
+            }
 
+            @Override
+            public void removeUpdate(DocumentEvent arg0) {
+                changeX(txtX.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent arg0) {
+                changeX(txtX.getText());
+            }
+        });
+        txtY.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent arg0) {
+                changeY(txtY.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent arg0) {
+                changeY(txtY.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent arg0) {
+                changeY(txtY.getText());
+            }
+        });
+        txtWidth.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent arg0) {
+                changeWidth(txtWidth.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent arg0) {
+                changeWidth(txtWidth.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent arg0) {
+                changeWidth(txtWidth.getText());
+            }
+        });
+        txtHeight.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent arg0) {
+                changeHeight(txtHeight.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent arg0) {
+                changeHeight(txtHeight.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent arg0) {
+                changeHeight(txtHeight.getText());
+            }
+        });
+    }
+    
+    private void changeX(String change)
+    {
+        try {
+            entity.setX(Integer.parseInt(change));
+        } catch (NumberFormatException e) {
+        }
+    }
+    
+    private void changeY(String change)
+    {
+        try {
+            entity.setY(Integer.parseInt(change));
+        } catch (NumberFormatException e) {
+        }
+    }
+    
+    private void changeWidth(String change)
+    {
+        try {
+            entity.setWidth(Integer.parseInt(change));
+        } catch (NumberFormatException e) {
+        }
+    }
+
+    private void changeHeight(String change)
+    {
+        try {
+            entity.setHeight(Integer.parseInt(change));
+        } catch (NumberFormatException e) {
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddBody;
+    private javax.swing.JButton btnDecHgt;
+    private javax.swing.JButton btnDecWdt;
+    private javax.swing.JButton btnDecX;
+    private javax.swing.JButton btnDecY;
     private javax.swing.JButton btnDeleteBody;
+    private javax.swing.JButton btnIncHgt;
+    private javax.swing.JButton btnIncWdt;
+    private javax.swing.JButton btnIncX;
+    private javax.swing.JButton btnIncY;
     private javax.swing.JButton btnMakePlayer;
     private javax.swing.JCheckBox chkAffectedByGravity;
     private javax.swing.JCheckBox chkFallingAnimation;
@@ -414,7 +742,15 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cmbStandingAnimation;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel lblHeight;
+    private javax.swing.JLabel lblWidth;
+    private javax.swing.JLabel lblX;
+    private javax.swing.JLabel lblY;
     private javax.swing.JPanel pnlBody;
+    private javax.swing.JTextField txtHeight;
     private javax.swing.JTextField txtParalax;
+    private javax.swing.JTextField txtWidth;
+    private javax.swing.JTextField txtX;
+    private javax.swing.JTextField txtY;
     // End of variables declaration//GEN-END:variables
 }

@@ -237,7 +237,6 @@ public class SideScrollerProto extends Canvas implements Runnable {
             }
             if (body.getStandingAnimation() != null) {
                 body.getStandingAnimation().tickAnimation();
-                System.out.println("yo!");
             }
         }
 
@@ -326,19 +325,12 @@ public class SideScrollerProto extends Canvas implements Runnable {
                     Body body = entity.getBody();
                     if (body instanceof MovingBody) {
                         MovingBody mBody = (MovingBody) body;
-                        System.out.println("is still: " + mBody.isStill());
-                        System.out.println("is null: "+(mBody.getStandingAnimation() != null));
-                        System.out.println("both: "+(mBody.getStandingAnimation() != null && mBody.isStill()));
                         if (mBody.getMovingAnimation() != null && mBody.isMoving()) {
-                            System.out.println("oh no");
                         } else if (mBody.getFallingAnimation() != null && mBody.isFalling()) {
-                            System.out.println("oh nooo");
                         } else if (mBody.getStandingAnimation() != null && mBody.isStill()) {
-                            System.out.println("ok");
                             image = mBody.getStandingAnimation().getImage();
                         }
                     } else if (body.getStandingAnimation() != null) {
-                        System.out.println("ok");
                         image = body.getStandingAnimation().getImage();
                     }
                 }

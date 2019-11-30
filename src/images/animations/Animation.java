@@ -35,7 +35,6 @@ public class Animation {
         images = parImages;
         spriteAmount = parImages.length;
         lapTimes = pLapTimes;
-        System.out.println("laps "+lapTimes[0].length);
         current = 0;
         lapCount = 0;
         animationLap = 3;
@@ -107,7 +106,6 @@ public class Animation {
     
     public BufferedImage getImage()
     {
-        System.out.println(lapTimes[1][current]);
         return images[lapTimes[1][current]];
     }
     
