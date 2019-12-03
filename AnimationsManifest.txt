@@ -1,0 +1,8 @@
+ASprite-001.png
+TimeFrame
+10 4 5 4 4 4 4 4 10
+ImageFrame
+1 2 3 4 5 4 3 2 1
+Properties
+Columns 16
+End

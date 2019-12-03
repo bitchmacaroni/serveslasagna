@@ -28,17 +28,13 @@ public class Animation {
     private int current;
     private int animationLap;
     private int lapCount;
-    private final int lapTimes[][];
+    private final int[][] lapTimes;
     private boolean ended;
 
-    public Animation(final BufferedImage[] parImages) {
+    public Animation(final BufferedImage[] parImages, final int[][] pLapTimes) {
         images = parImages;
         spriteAmount = parImages.length;
-        lapTimes = new int[parImages.length][2];
-        for (int i = 0; i < lapTimes.length; i++) {
-            lapTimes[i][0]=3;
-            lapTimes[i][1]= i==lapTimes.length-1 ? 0 : i+1;
-        }
+        lapTimes = pLapTimes;
         current = 0;
         lapCount = 0;
         animationLap = 3;
@@ -100,26 +96,33 @@ public class Animation {
         return animationLap;
     }
 
+    public BufferedImage[] getImages() {
+        return images;
+    }
+    
     public void setAnimationLap(int animationLap) {
         this.animationLap = animationLap;
     }
     
     public BufferedImage getImage()
     {
-        return images[current];
+        return images[lapTimes[1][current]];
     }
     
-    public void thickAnimation()
+    
+    
+    public void tickAnimation()
     {
         lapCount++;
-        if(lapCount > animationLap)
+        if(lapCount > lapTimes[0][current])
         {
             current++;
             lapCount = 0;
         }
-        if(current >= spriteAmount)
+        if(current >= lapTimes[0].length)
         {
-            ended = true;
+            current = 0;
+            //ended = true;
         }
     }
 
@@ -127,4 +130,8 @@ public class Animation {
         return ended;
     }
     
+    public Animation cloneAnimation()
+    {
+        return new Animation(images, lapTimes);
+    }
 }

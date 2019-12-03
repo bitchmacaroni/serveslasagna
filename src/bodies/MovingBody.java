@@ -29,7 +29,7 @@ public class MovingBody extends Body implements Movable {
         super();
         afectedByGravity = false;
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="getters/setters">
     public float getSpeedX() {
         return speedX;
@@ -102,10 +102,24 @@ public class MovingBody extends Body implements Movable {
     public void setFallingAnimation(Animation fallingAnimation) {
         this.fallingAnimation = fallingAnimation;
     }
+
+    public boolean isMoving() {
+        return false;
+    }
+
+    public boolean isFalling() {
+        return false;
+    }
+
+    public boolean isStill() {
+        System.out.println("speed is "+getSpeedX()+" , "+getSpeedY());
+        return (-0.4 < speedX && speedX <= 0.4) && (speedY < 0.4 && speedY > -0.4);
+    }
+
     // </editor-fold>
-    
     @Override
     public void move(List<Body> knownBodies) {
+        generalFisics();
         if (isSolid()) {
             for (Body knownBody : knownBodies) {
                 if (!(this.equals(knownBody)) && knownBody.isSolid()) {
@@ -143,7 +157,7 @@ public class MovingBody extends Body implements Movable {
                 }
             }
         }
-        generalFisics();
+        
     }
 
     private void solidsSpaceConflict(GameShape contactShape) {
@@ -169,8 +183,11 @@ public class MovingBody extends Body implements Movable {
 
         setSpeedY(0);
         setSpeedYSurplus(0);
+        
 
         setSpeedX(getSolidity().getFriction(getSpeedX()));
+        
+        System.out.println("speed is "+getSpeedX()+" , "+getSpeedY());
     }
 
     private void relocateDownward(GameShape contactShape) {
