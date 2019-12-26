@@ -7,6 +7,7 @@ package editor.tool;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import shapes.GameShape;
 import shapes.Point;
 
 /**
@@ -51,6 +52,11 @@ public class TriangleTool extends Tool{
 
     @Override
     public boolean contactLine(Point point1, Point point2) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public TriangleTool copy() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

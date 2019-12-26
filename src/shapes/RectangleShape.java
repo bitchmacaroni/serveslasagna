@@ -5,7 +5,9 @@
  */
 package shapes;
 
+import bodies.MovingBody;
 import camera.Camera;
+import editor.controller.entityClickers.Draggable;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -13,7 +15,7 @@ import java.awt.Graphics2D;
  *
  * @author christian
  */
- public class RectangleShape extends GameShape{
+ public class RectangleShape extends GameShape implements Draggable{
 
     public RectangleShape(Color color, int x, int y, int width, int height) {
         super(color, x, y, width, height);
@@ -35,6 +37,13 @@ import java.awt.Graphics2D;
     @Override
     public boolean contactLine(Point point1, Point point2) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public RectangleShape copy() {
+        RectangleShape returnShape = new RectangleShape(getColor(), getX(), getY(), getWidth(), getHeight());
+        super.copyInto(returnShape);
+        return returnShape;
     }
     
     

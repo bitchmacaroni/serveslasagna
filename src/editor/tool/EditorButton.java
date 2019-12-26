@@ -34,5 +34,11 @@ public abstract class EditorButton extends GameShape implements Action{
 
     @Override
     public abstract void doIt();
+
+    @Override
+    public EditorButton copy()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
 }

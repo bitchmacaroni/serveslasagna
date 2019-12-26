@@ -5,14 +5,10 @@
  */
 package editor.tool;
 
-import camera.Camera;
-import images.GameImages;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 import shapes.Clickable;
 import shapes.Point;
-import sidescrollerproto.SideScrollerProto;
 
 /**
  *
@@ -38,6 +34,11 @@ public class RectangleTool extends Tool{
 
     @Override
     public boolean contactLine(Point point1, Point point2) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public RectangleTool copy() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

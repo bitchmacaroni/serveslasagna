@@ -12,7 +12,7 @@ import java.awt.Graphics2D;
  *
  * @author christian
  */
-public class PointShape extends GameShape{
+public class PointShape extends GameShape {
 
     public PointShape(Color color, int x, int y) {
         super(color, x, y, 0, 0);
@@ -46,5 +46,10 @@ public class PointShape extends GameShape{
     @Override
     public boolean contactLine(Point point1, Point point2) {
         return false;
+    }
+
+    @Override
+    public GameShape copy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
