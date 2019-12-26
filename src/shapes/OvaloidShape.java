@@ -5,6 +5,7 @@
  */
 package shapes;
 
+import editor.controller.entityClickers.Draggable;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -12,7 +13,7 @@ import java.awt.Graphics2D;
  *
  * @author christian
  */
-public class OvaloidShape extends GameShape{
+public class OvaloidShape extends GameShape  implements Draggable{
 
     public OvaloidShape(Color color, int x, int y, int width, int height) {
         super(color, x, y, width, height);
@@ -30,6 +31,11 @@ public class OvaloidShape extends GameShape{
 
     @Override
     public boolean contactLine(Point point1, Point point2) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public GameShape copy() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

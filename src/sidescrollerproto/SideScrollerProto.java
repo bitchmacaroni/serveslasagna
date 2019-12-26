@@ -10,8 +10,11 @@ import auxiliary.KeyIsPressed;
 import bodies.Body;
 import bodies.MovingBody;
 import camera.Camera;
-import editor.controller.EntityClicker;
+import editor.ObjectListFrame;
+import editor.controller.entityClickers.EntityClicker;
 import editor.controller.ShapeCreator;
+import editor.controller.entityClickers.ClickableCanvas;
+import editor.controller.entityClickers.EditorEntityClicker;
 import editor.tool.EditorButton;
 import editor.tool.RectangleTool;
 import editor.tool.Tool;
@@ -25,6 +28,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
@@ -40,17 +44,24 @@ import shapes.Point;
  *
  * @author christian
  */
-public class SideScrollerProto extends Canvas implements Runnable {
+public class SideScrollerProto extends Canvas implements Runnable, ClickableCanvas {
 
     private static final long serialVersionUID = 1L;
-    private static final int WIDTH = 400;
-    private static final int HEIGHT = WIDTH / 12 * 9;
+    private static final int WIDTH/*;//*/= 400;
+    private static final int HEIGHT/*;//*/ = WIDTH / 12 * 9;
+    /*
+    static {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        WIDTH = screenSize.width;
+        HEIGHT = screenSize.height;
+    }
+    //*/
     private static final int SCALE = 3;
     private static final String NAME = "Sidescroller Game";
     private JFrame frame;
     private boolean running = false;
     private int tickCount = 0;
-    private GameMouseEvent mouseEvents;
+    private final GameMouseEvent mouseEvents;
     private EntityClicker entityClicker;
     private Camera mainCamera;
     private KeyIsPressed key = new KeyIsPressed();
@@ -104,13 +115,26 @@ public class SideScrollerProto extends Canvas implements Runnable {
         entities.add(rectangle);
         rectangle = new RectangleTool(Color.YELLOW, getWidth() - 50, 110, 40, 20);
         entities.add(rectangle);
-        entityClicker = new EntityClicker(mouseEvents, entities, this);
-
+        entityClicker = new EditorEntityClicker(mouseEvents, entities, this);
         gameBodies = new LinkedList<>();
 
         testMovements = false;
 
-        EditorButton button = new EditorButton(Color.BLUE, getWidth() - 50, getHeight() - 200, 40, 20) {
+        EditorButton editorObjectsButton = new EditorButton(Color.PINK, getWidth() - 50, 250, 40, 20) {
+            @Override
+            public void doIt() {
+                entityClicker.setEnabled(false);
+                new ObjectListFrame(entityClicker).start();
+            }
+
+            @Override
+            public boolean contactLine(Point point1, Point point2) {
+                return false;
+            }
+        };
+        entities.add(editorObjectsButton);
+
+        EditorButton saveMapButton = new EditorButton(Color.BLUE, getWidth() - 50, getHeight() - 200, 40, 20) {
             @Override
             public void doIt() {
                 new Map(1000, 1000).saveMap("asdf", entities);
@@ -121,7 +145,7 @@ public class SideScrollerProto extends Canvas implements Runnable {
                 return false;
             }
         };
-        entities.add(button);
+        entities.add(saveMapButton);
 
         EditorButton testButton = new EditorButton(Color.PINK, getWidth() - 50, getHeight() - 300, 40, 20) {
             @Override
@@ -214,7 +238,7 @@ public class SideScrollerProto extends Canvas implements Runnable {
             }
             if (System.currentTimeMillis() - lastTimer >= 1000) {
                 lastTimer += 1000;
-                System.out.println(frames + "," + ticks);
+                //System.out.println(frames + "," + ticks);
                 frames = 0;
                 ticks = 0;
             }
@@ -277,7 +301,6 @@ public class SideScrollerProto extends Canvas implements Runnable {
         if (KeyIsPressed.isDeletePressed()) {
             entityClicker.deleteSelected();
         }
-
     }
 
     private void render() {
@@ -350,12 +373,27 @@ public class SideScrollerProto extends Canvas implements Runnable {
         bs.show();
     }
 
+    @Override
     public int getMouseX() {
-        return getMousePosition().x;
+        if (getMousePosition() != null) {
+            return getMousePosition().x;
+        } else {
+            return -1;
+        }
     }
 
+    @Override
     public int getMouseY() {
-        return getMousePosition().y;
+        if (getMousePosition() != null) {
+            return getMousePosition().y;
+        } else {
+            return -1;
+        }
+    }
+
+    @Override
+    public boolean isMouseOutsideCanvas() {
+        return getMousePosition() == null;
     }
 
     public static int getWIDTH() {

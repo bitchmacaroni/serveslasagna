@@ -25,8 +25,8 @@ public class MovingBody extends Body implements Movable {
     protected Animation movingAnimation;
     protected Animation fallingAnimation;
 
-    public MovingBody() {
-        super();
+    public MovingBody(GameShape shape) {
+        super(shape);
         afectedByGravity = false;
     }
 
@@ -112,7 +112,7 @@ public class MovingBody extends Body implements Movable {
     }
 
     public boolean isStill() {
-        System.out.println("speed is "+getSpeedX()+" , "+getSpeedY());
+        System.out.println("speed is " + getSpeedX() + " , " + getSpeedY());
         return (-0.4 < speedX && speedX <= 0.4) && (speedY < 0.4 && speedY > -0.4);
     }
 
@@ -157,7 +157,7 @@ public class MovingBody extends Body implements Movable {
                 }
             }
         }
-        
+
     }
 
     private void solidsSpaceConflict(GameShape contactShape) {
@@ -183,11 +183,10 @@ public class MovingBody extends Body implements Movable {
 
         setSpeedY(0);
         setSpeedYSurplus(0);
-        
 
         setSpeedX(getSolidity().getFriction(getSpeedX()));
-        
-        System.out.println("speed is "+getSpeedX()+" , "+getSpeedY());
+
+        System.out.println("speed is " + getSpeedX() + " , " + getSpeedY());
     }
 
     private void relocateDownward(GameShape contactShape) {
@@ -242,7 +241,28 @@ public class MovingBody extends Body implements Movable {
         if (isAfectedByGravity()) {
             speedY += 5;
         }
-
     }
 
+    @Override
+    public MovingBody copy(GameShape shapeOfBody) {
+        return copyInto(new MovingBody(shapeOfBody));
+    }
+
+    protected MovingBody copyInto(MovingBody body) {
+        super.copyInto(body);
+        body.setSpeedX(speedX);
+        body.setSpeedXSurplus(speedXSurplus);
+        body.setSpeedY(speedY);
+        body.setSpeedYSurplus(speedYSurplus);
+        body.setAccelerationX(accelerationX);
+        body.setAccelerationY(accelerationY);
+        body.setAfectedByGravity(afectedByGravity);
+        if (fallingAnimation != null) {
+            body.setFallingAnimation(fallingAnimation.cloneAnimation());
+        }
+        if (movingAnimation != null) {
+            body.setMovingAnimation(movingAnimation.cloneAnimation());
+        }
+        return body;
+    }
 }

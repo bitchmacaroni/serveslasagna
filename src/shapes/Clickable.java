@@ -23,15 +23,21 @@ public interface Clickable {
         }
         return null;
     }
+    
+    static boolean checkWasClicked(Clickable clickable, Point pointClicked)
+    {
+        return clickable.wasClicked(pointClicked);
+    }
+    
 
-    static boolean insideSquareArea(Point clickPoint, Point position, int width, int height) {
-        int minX = position.getX() - (width / 2);
+    static boolean insideSquareArea(Point clickPoint, Point squarePosition, int width, int height) {
+        int minX = squarePosition.getX() - (width / 2);
         if (clickPoint.getX() >= minX) {
-            int maxX = position.getX() + (width / 2);
+            int maxX = squarePosition.getX() + (width / 2);
             if (clickPoint.getX() <= maxX) {
-                int minY = position.getY() - (height / 2);
+                int minY = squarePosition.getY() - (height / 2);
                 if (clickPoint.getY() >= minY) {
-                    int maxY = position.getY() + (height / 2);
+                    int maxY = squarePosition.getY() + (height / 2);
                     if (clickPoint.getY() <= maxY) {
                         return true;
                     }

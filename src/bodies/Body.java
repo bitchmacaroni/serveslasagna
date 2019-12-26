@@ -18,9 +18,9 @@ public class Body {
     protected SolidProperty solidity;
     protected Animation standingAnimation;
 
-    public Body() {
+    public Body(GameShape shape) {
+        this.shape = shape;
         solidity = new SolidProperty();
-
     }
 
     public GameShape getShape() {
@@ -45,6 +45,10 @@ public class Body {
         }
     }
 
+    private void setSolid(SolidProperty solidity) {
+        this.solidity = solidity;
+    }
+
     public SolidProperty getSolidity() {
         return solidity;
     }
@@ -56,7 +60,16 @@ public class Body {
     public void setStandingAnimation(Animation standingAnimation) {
         this.standingAnimation = standingAnimation;
     }
-    
-    
 
+    protected Body copyInto(Body body) {
+        body.setSolid(solidity.copy());
+        if (standingAnimation != null) {
+            body.setStandingAnimation(standingAnimation.cloneAnimation());
+        }
+        return body;
+    }
+
+    public Body copy(GameShape shapeOfBody) {
+        return copyInto(new Body(shapeOfBody));
+    }
 }

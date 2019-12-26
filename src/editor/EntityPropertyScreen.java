@@ -7,7 +7,7 @@ package editor;
 
 import bodies.Body;
 import bodies.MovingBody;
-import editor.controller.EntityClicker;
+import editor.controller.entityClickers.EntityClicker;
 import images.GameImages;
 import images.animations.GameAnimations;
 import java.awt.Color;
@@ -188,9 +188,6 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
         pnlBodyLayout.setHorizontalGroup(
             pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBodyLayout.createSequentialGroup()
-                .addComponent(chkMovingAnimation)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnlBodyLayout.createSequentialGroup()
                 .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(cmbFallingAnimation, javax.swing.GroupLayout.Alignment.LEADING, 0, 131, Short.MAX_VALUE)
                     .addComponent(cmbMovingAnimation, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -206,7 +203,9 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
                     .addComponent(chkMovingBody))
                 .addGap(15, 15, 15))
             .addGroup(pnlBodyLayout.createSequentialGroup()
-                .addComponent(chkFallingAnimation)
+                .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chkMovingAnimation)
+                    .addComponent(chkFallingAnimation))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlBodyLayout.setVerticalGroup(
@@ -399,21 +398,23 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
                                 .addComponent(btnAddBody)
                                 .addGap(9, 9, 9))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblY)
-                                    .addComponent(txtY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addComponent(btnIncY)
                                         .addGap(5, 5, 5)
-                                        .addComponent(btnDecY)))
+                                        .addComponent(btnDecY))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(lblY)
+                                        .addComponent(txtY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblHeight)
-                            .addComponent(txtHeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnIncHgt)
                                 .addGap(5, 5, 5)
-                                .addComponent(btnDecHgt)))
+                                .addComponent(btnDecHgt))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblHeight)
+                                .addComponent(txtHeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(408, Short.MAX_VALUE))))
         );
 
@@ -449,8 +450,7 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbImagenesActionPerformed
 
     private void btnAddBodyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddBodyActionPerformed
-        Body newBody = new Body();
-        newBody.setShape(entity);
+        Body newBody = new Body(entity);
         entity.setBody(newBody);
         bodies.add(newBody);
         body = newBody;
@@ -460,9 +460,8 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
     private void chkMovingBodyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkMovingBodyActionPerformed
         if (enableSelect) {
             if (chkMovingBody.isSelected()) {
-                MovingBody newMovingBody = new MovingBody();
+                MovingBody newMovingBody = new MovingBody(entity);
                 bodies.remove(body);
-                newMovingBody.setShape(entity);
                 entity.setBody(newMovingBody);
                 body = newMovingBody;
                 bodies.add(newMovingBody);
@@ -470,8 +469,7 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
                 btnMakePlayer.setVisible(true);
             } else {
                 bodies.remove(body);
-                Body newBody = new Body();
-                newBody.setShape(entity);
+                Body newBody = new Body(entity);
                 entity.setBody(newBody);
                 bodies.add(newBody);
                 body = newBody;

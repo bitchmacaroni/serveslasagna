@@ -47,4 +47,18 @@ public class SolidProperty {
     public void setMass(float mass) {
         this.mass = mass;
     }
+    
+    public SolidProperty copy()
+    {
+        return copyInto(new SolidProperty());
+    }
+    
+    protected SolidProperty copyInto(SolidProperty solidity)
+    {
+        solidity.setElasticity(elasticity);
+        solidity.setMass(mass);
+        solidity.setRoughness(roughness);
+        return solidity;
+    }
+    
 }

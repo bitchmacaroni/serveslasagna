@@ -39,5 +39,10 @@ public class OvaloidTool extends Tool{
     public boolean contactLine(Point point1, Point point2) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public OvaloidTool copy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
