@@ -14,15 +14,15 @@ import static java.lang.Math.abs;
  */
 public class SolidProperty {
 
-    private int roughness = 1;
+    private float roughness = 1;
     private int elasticity = 0;
     private float mass = 1;
 
-    public int getRoughness() {
+    public float getRoughness() {
         return roughness;
     }
 
-    public void setRoughness(int roughness) {
+    public void setRoughness(float roughness) {
         this.roughness = roughness;
     }
 
@@ -37,7 +37,7 @@ public class SolidProperty {
     public float getFriction(float speed)
     {
         int sign = (speed > 0)?1:-1;
-        return sign*max(abs(speed)-roughness,0);
+        return sign*max(abs(speed)-roughness - abs(speed)*0.1f*roughness,0);
     }
 
     public float getMass() {

@@ -112,7 +112,8 @@ public class MovingBody extends Body implements Movable {
     }
 
     public boolean isStill() {
-        System.out.println("speed is " + getSpeedX() + " , " + getSpeedY());
+        //System.out.println("speed is " + getSpeedX() + " , " + getSpeedY());
+        //System.out.println("is still? "+((-0.4 < speedX && speedX <= 0.4) && (speedY < 0.4 && speedY > -0.4)));
         return (-0.4 < speedX && speedX <= 0.4) && (speedY < 0.4 && speedY > -0.4);
     }
 

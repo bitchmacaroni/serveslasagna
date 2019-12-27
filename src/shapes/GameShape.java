@@ -8,8 +8,10 @@ package shapes;
 import bodies.Body;
 import bodies.MovingBody;
 import images.GameImages;
+import images.ImageProperties;
 import java.awt.Color;
 import java.awt.Image;
+import sidescrollerproto.SideScrollerProto;
 
 /**
  *
@@ -21,7 +23,7 @@ public abstract class GameShape implements Drawable, Clickable {
     private Point position;
     protected int width, height;
     private float rotation;
-    private Image objectImage = null;
+    private ImageProperties imageProperties;
     private float scale;
     private float paralax;
     Body body = null;
@@ -34,6 +36,7 @@ public abstract class GameShape implements Drawable, Clickable {
         scale = 100;
         rotation = 0;
         paralax = 1;
+        imageProperties = new ImageProperties();
     }
 
     public void setBody(Body body) {
@@ -104,16 +107,22 @@ public abstract class GameShape implements Drawable, Clickable {
         this.rotation = rotation;
     }
 
+    public ImageProperties getImageProperties() {
+        return imageProperties;
+    }
+
     public Image getObjectImage() {
-        return objectImage;
+        return imageProperties.getImage();
     }
 
     public void setObjectImage(String name) {
-        this.objectImage = GameImages.getImage(name);
+        setObjectImage(GameImages.getImage(name));
     }
 
     protected void setObjectImage(Image image) {
-        this.objectImage = image;
+        imageProperties.setImage(image);
+        imageProperties.setWidth(getObjectImage().getWidth(SideScrollerProto.getCurrentInstance()));
+        imageProperties.setHeight(getObjectImage().getHeight(SideScrollerProto.getCurrentInstance()));
     }
 
     public float getParalax() {
@@ -165,8 +174,8 @@ public abstract class GameShape implements Drawable, Clickable {
         returnShape.setRotation(rotation);
         returnShape.setParalax(paralax);
         returnShape.setScale(scale);
-        if (objectImage != null) {
-            returnShape.setObjectImage(objectImage);
+        if (getObjectImage() != null) {
+            returnShape.setObjectImage(getObjectImage());
         }
         if (body != null) {
             returnShape.setBody(body.copy(returnShape));

@@ -20,6 +20,7 @@ import editor.tool.RectangleTool;
 import editor.tool.Tool;
 import editor.tool.TriangleTool;
 import images.GameImages;
+import images.ImageProperties;
 import images.animations.GameAnimations;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -46,8 +47,9 @@ import shapes.Point;
  */
 public class SideScrollerProto extends Canvas implements Runnable, ClickableCanvas {
 
+    private static SideScrollerProto currentInstance;
     private static final long serialVersionUID = 1L;
-    private static final int WIDTH/*;//*/= 400;
+    private static final int WIDTH/*;//*/ = 400;
     private static final int HEIGHT/*;//*/ = WIDTH / 12 * 9;
     /*
     static {
@@ -74,6 +76,7 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
     public Tool SelectedTool;
 
     public SideScrollerProto() {
+        currentInstance = this;
         setMinimumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
@@ -264,7 +267,7 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
             }
         }
 
-        if (player != null && tickCount % 10 == 0) {
+        if (player != null) {
             if (KeyIsPressed.isWPressed()) {
                 player.setSpeedY(player.getSpeedY() - 10);
                 //mainCamera.moveDown(5);
@@ -273,11 +276,11 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
                 player.setSpeedY(player.getSpeedY() + 10);
             }
             if (KeyIsPressed.isDPressed()) {
-                player.setSpeedX(player.getSpeedX() + 5);
+                player.setSpeedX(player.getSpeedX() + 3);
                 //mainCamera.moveRight(5);
             }
             if (KeyIsPressed.isAPressed()) {
-                player.setSpeedX(player.getSpeedX() - 5);
+                player.setSpeedX(player.getSpeedX() - 3);
                 //mainCamera.moveLeft(5);
             }
         }
@@ -330,16 +333,18 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
         g2d.setColor(Color.black);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
+        
         double x = WIDTH * SCALE / 2 + mainCamera.getZoom() * (0 - mainCamera.getxPos() - 1 * GameImages.getImage("guy.png").getWidth(this) / 2);
         double y = HEIGHT * SCALE / 2 + mainCamera.getZoom() * (0 - mainCamera.getyPos() - 1 * GameImages.getImage("guy.png").getHeight(this) / 2);
         double scale = (double) mainCamera.getZoom() * 1;
         double rotation = Math.toRadians(tickCount);
 
         AffineTransform af = AffineTransform.getTranslateInstance(x, y);
-        af.scale(scale, scale);
+        af.scale(scale, scale);//*/
         af.rotate(rotation,/*0/**/ GameImages.getImage("guy.png").getWidth(this) / 2 /**/, /*0/**/ GameImages.getImage("guy.png").getHeight(this) / 2 /**/);
-        //g2d.drawImage(GameImages.getImage("guy.png"), af, null);
-
+        g2d.drawImage(GameImages.getImage("guy.png"), af, null);
+        
+        
         //g2d.drawImage(GameImages.getGuy(), 0, 0, getWidth(), getHeight(), this);
         for (GameShape entity : entities) {
             if (entity.getObjectImage() != null) {
@@ -357,12 +362,15 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
                         image = body.getStandingAnimation().getImage();
                     }
                 }
-                double x2 = WIDTH * SCALE / 2 + entity.getParalax() * mainCamera.getZoom() * (entity.getX() - mainCamera.getxPos() - entity.getScale() * entity.getWidth() / 2);
-                double y2 = HEIGHT * SCALE / 2 + entity.getParalax() * mainCamera.getZoom() * (entity.getY() - mainCamera.getyPos() - entity.getScale() * entity.getHeight() / 2);
+                double x2 = WIDTH * SCALE / 2 + entity.getParalax() * mainCamera.getZoom() * (entity.getX() - mainCamera.getxPos() - entity.getScale()*entity.getImageProperties().getWidth()/ 2);;
+                double y2 = HEIGHT * SCALE / 2 + entity.getParalax() * mainCamera.getZoom() * (entity.getY() - mainCamera.getyPos() - entity.getScale() * entity.getImageProperties().getHeight() / 2);
                 double scale2 = (double) mainCamera.getZoom() * entity.getScale();
                 double rotation2 = Math.toRadians(entity.getRotation());
                 AffineTransform af2 = AffineTransform.getTranslateInstance(x2, y2);
-                af2.scale(scale2 * entity.getWidth() / image.getWidth(this), scale2 * entity.getHeight() / image.getHeight(this));
+                //AffineTransform af2 = AffineTransform.getTranslateInstance(100, 100);
+                //System.out.println(entity.getImageProperties().getWidth()+" "+entity.getImageProperties().getHeight()+" "+(image == null));
+                af2.scale(scale2 * entity.getImageProperties().getWidth() / image.getWidth(this), scale2 * entity.getImageProperties().getHeight() / image.getWidth(this));
+                //af2.scale(scale2 * entity.getWidth() / image.getWidth(this), scale2 * entity.getHeight() / image.getHeight(this));
                 af2.rotate(rotation2, image.getWidth(this) / 2, image.getHeight(this) / 2);
                 g2d.drawImage(image, af2, null);
             }
@@ -418,6 +426,10 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
 
     public void setPlayer(MovingBody player) {
         this.player = player;
+    }
+
+    public static SideScrollerProto getCurrentInstance() {
+        return currentInstance;
     }
 
 }
