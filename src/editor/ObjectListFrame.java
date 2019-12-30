@@ -12,6 +12,7 @@ import bodies.MovingBody;
 import editor.controller.entityClickers.ClickableCanvas;
 import editor.controller.entityClickers.EntityClicker;
 import editor.controller.entityClickers.ObjectListEntityClicker;
+import editor.predefinedObjects.GamePredefinedObjects;
 import images.GameImages;
 import images.animations.GameAnimations;
 import java.awt.BorderLayout;
@@ -76,7 +77,16 @@ public class ObjectListFrame extends Canvas implements Runnable, ClickableCanvas
         
         
         
-        entities = new ArrayList<>();
+        entities = GamePredefinedObjects.getPredefinedObjects();
+        
+        int increment = 0;
+        for (GameShape entity : entities) {
+            entity.setX(entity.getWidth()/2);
+            entity.setY(entity.getHeight()/2 + increment);
+            increment += 3 + entity.getHeight();
+        }
+        
+        
         
         GameMouseEvent mouseEvents = new GameMouseEvent();
         addMouseListener(mouseEvents);
@@ -86,12 +96,12 @@ public class ObjectListFrame extends Canvas implements Runnable, ClickableCanvas
         addMouseWheelListener(wheel);
         
         
-        //default object -- REMOVE ME
+        /*/default object -- REMOVE ME
         int increment = 0;
         RectangleShape shape = new RectangleShape(Color.yellow, 100 , 100 + increment, this.getWidth(), 200);
         shape.setObjectImage("guy.png");
         shape.setBody(new MovingBody(shape));
-        shape.getBody().setStandingAnimation(GameAnimations.getAnimation("ASprite-001.png"));
+        shape.getBody().setStandingAnimation(GameAnimations.getAnimation("chev_run_004.gif"));
         shape.setScale(1);
         shape.setColor(Color.RED);
         entities.add(shape);
@@ -99,11 +109,14 @@ public class ObjectListFrame extends Canvas implements Runnable, ClickableCanvas
         RectangleShape shape2 = new RectangleShape(Color.yellow, 100 , 150 + increment, this.getWidth(), 300);
         shape2.setObjectImage("guy.png");
         shape2.setBody(new Body(shape));
-        shape2.getBody().setStandingAnimation(GameAnimations.getAnimation("ASprite-001.png"));
+        shape2.getBody().setStandingAnimation(GameAnimations.getAnimation("chev_run_004.gif"));
         shape2.setScale(1);
         shape2.setColor(Color.RED);
         entities.add(shape2);
-        //
+        //*/
+        
+        
+        
         
         this.editorEntityClicker = entityClicker;
         listEntityClicker = new ObjectListEntityClicker(mouseEvents, entities, this,editorEntityClicker);
@@ -193,8 +206,9 @@ public class ObjectListFrame extends Canvas implements Runnable, ClickableCanvas
                 af2.scale(scale2 * entity.getWidth() / image.getWidth(this), scale2 * entity.getHeight() / image.getHeight(this));
                 af2.rotate(rotation2, image.getWidth(this) / 2, image.getHeight(this) / 2);
                 g2d.drawImage(image, af2, null);
+                //System.out.println(entity.toString());
             }
-            entity.draw(g2d);
+            //entity.draw(g2d);
         }
 
         g.dispose();

@@ -14,16 +14,17 @@ import java.awt.image.BufferedImage;
  * @author jorge matte
  */
 public class Animation {
+
     private int x;
     private int y;
+    private int xOffset;
+    private int yOffset;
     private final BufferedImage[] images;
     private Image backgroundImage;
     private float imageSize;
     private float rotation;
-    private float backgroundSize; 
-    
-    
-    
+    private float backgroundSize;
+
     private int spriteAmount;
     private int current;
     private int animationLap;
@@ -58,6 +59,22 @@ public class Animation {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public int getxOffset() {
+        return xOffset;
+    }
+
+    public void setxOffset(int xOffset) {
+        this.xOffset = xOffset;
+    }
+
+    public int getyOffset() {
+        return yOffset;
+    }
+
+    public void setyOffset(int yOffset) {
+        this.yOffset = yOffset;
     }
 
     public float getImageSize() {
@@ -99,28 +116,28 @@ public class Animation {
     public BufferedImage[] getImages() {
         return images;
     }
-    
+
     public void setAnimationLap(int animationLap) {
         this.animationLap = animationLap;
     }
-    
-    public BufferedImage getImage()
-    {
+
+    public BufferedImage getImage() {
         return images[lapTimes[1][current]];
     }
     
-    
-    
-    public void tickAnimation()
+    public Image getFirstImage()
     {
+        return images[0];
+    }
+    
+
+    public void tickAnimation() {
         lapCount++;
-        if(lapCount > lapTimes[0][current])
-        {
+        if (lapCount > lapTimes[0][current]) {
             current++;
             lapCount = 0;
         }
-        if(current >= lapTimes[0].length)
-        {
+        if (current >= lapTimes[0].length) {
             current = 0;
             //ended = true;
         }
@@ -129,9 +146,11 @@ public class Animation {
     public boolean isEnded() {
         return ended;
     }
-    
-    public Animation cloneAnimation()
-    {
-        return new Animation(images, lapTimes);
+
+    public Animation cloneAnimation() {
+        Animation clone = new Animation(images, lapTimes);
+        clone.setxOffset(xOffset);
+        clone.setyOffset(yOffset);
+        return clone;
     }
 }

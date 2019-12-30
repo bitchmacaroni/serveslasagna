@@ -19,12 +19,12 @@ import sidescrollerproto.SideScrollerProto;
  * @author christian
  */
 public class ObjectListEntityClicker extends EntityClicker {
-
+    
     private EntityClicker handOverEntityClicker;
     private GameShape draggingObject;
     private boolean initialClick = true;
     private boolean initialDragged = true;
-
+    
     public ObjectListEntityClicker(
             GameMouseEvent mouseEvents,
             List<GameShape> entities,
@@ -33,15 +33,16 @@ public class ObjectListEntityClicker extends EntityClicker {
         super(mouseEvents, entities, frameReference);
         this.handOverEntityClicker = handOverEntityClicker;
     }
-
+    
     @Override
     protected void clicking() {
-
+        
         if (initialClick) {
             //System.out.println("clicking");
             //System.out.println(this.clickedPoint.getX() + " , " + this.clickedPoint.getY());
             //System.out.println("initial locks");
             initialClick = false;
+            selectedItem = null;
             int i = 0;
             for (GameShape entity : entities) {
                 i++;
@@ -52,7 +53,7 @@ public class ObjectListEntityClicker extends EntityClicker {
             }
         }
     }
-
+    
     @Override
     protected void clicked() {
         entities.remove(draggingObject);
@@ -60,12 +61,12 @@ public class ObjectListEntityClicker extends EntityClicker {
         initialClick = true;
         draggingObject = null;
     }
-
+    
     @Override
     protected void doubleClicked() {
         clicked();
     }
-
+    
     @Override
     protected void dragged() {
         if (initialDragged) {
@@ -78,7 +79,7 @@ public class ObjectListEntityClicker extends EntityClicker {
         } catch (NullPointerException e) {
         }
     }
-
+    
     @Override
     protected void outOfBounds() {
         if (draggingObject != null) {
@@ -89,10 +90,13 @@ public class ObjectListEntityClicker extends EntityClicker {
             handOverEntityClicker.mouseEvents = this.mouseEvents;
             handOverEntityClicker.enabled = true;
             handOverEntityClicker.triggered = true;
+            if (draggingObject.getBody() != null) {
+                SideScrollerProto.getCurrentInstance().addBody(draggingObject.getBody());
+            }
             entities.remove(draggingObject);
             draggingObject = null;
             //((ObjectListFrame) frameReference).dispose();
         }
     }
-
+    
 }

@@ -1,0 +1,22 @@
+object: rectangleshape
+width 70
+height 40
+image animation:chev_run_004.gif
+body:
+standinganimation chev_run_004.gif
+endbody
+end
+
+object: rectangleshape
+width 70
+height 200
+image animation:main_idle_010.gif
+imagewidth 70
+imageheight 200
+movingbody:
+standinganimation main_idle_010.gif
+movinganimation main_walk_015.gif
+gravityon
+
+endbody
+end

@@ -497,13 +497,13 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
 
     private void chkStandingAnimationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkStandingAnimationActionPerformed
         if (chkStandingAnimation.isSelected()) {
-            cmbFallingAnimation.setVisible(true);
+            cmbStandingAnimation.setVisible(true);
             if (entity.getBody() != null) {
                 entity.getBody().setStandingAnimation(GameAnimations.getAnimation((String) cmbStandingAnimation.getSelectedItem()));
                 System.out.println("set!");
             }
         } else {
-            cmbFallingAnimation.setVisible(false);
+            cmbStandingAnimation.setVisible(false);
             if (entity.getBody() != null) {
                 entity.getBody().setStandingAnimation(null);
             }
@@ -587,7 +587,7 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
     }
 
     private void loadAnimationsDropDown() {
-        List<String> animationNames = GameAnimations.getImagesNames();
+        List<String> animationNames = GameAnimations.getAnimationNames();
         DefaultComboBoxModel<String> fallingModel = new DefaultComboBoxModel<>();
         DefaultComboBoxModel<String> standingModel = new DefaultComboBoxModel<>();
         DefaultComboBoxModel<String> movingModel = new DefaultComboBoxModel<>();
@@ -597,16 +597,16 @@ public class EntityPropertyScreen extends javax.swing.JFrame {
             movingModel.addElement(animationName);
             if (entity.getBody() != null) {
                 if (entity.getBody().getStandingAnimation() != null
-                        && animationName.equals(GameAnimations.getImageName(entity.getBody().getStandingAnimation()))) {
+                        && animationName.equals(GameAnimations.getAnimationName(entity.getBody().getStandingAnimation()))) {
                     standingModel.setSelectedItem(animationName);
                 }
                 if (entity.getBody() instanceof MovingBody) {
                     if (((MovingBody) entity.getBody()).getMovingAnimation() != null
-                            && animationName.equals(GameAnimations.getImageName(((MovingBody) entity.getBody()).getMovingAnimation()))) {
+                            && animationName.equals(GameAnimations.getAnimationName(((MovingBody) entity.getBody()).getMovingAnimation()))) {
                         movingModel.setSelectedItem(animationName);
                     }
                     if (((MovingBody) entity.getBody()).getFallingAnimation() != null
-                            && animationName.equals(GameAnimations.getImageName(((MovingBody) entity.getBody()).getFallingAnimation()))) {
+                            && animationName.equals(GameAnimations.getAnimationName(((MovingBody) entity.getBody()).getFallingAnimation()))) {
                         fallingModel.setSelectedItem(animationName);
                     }
                 }

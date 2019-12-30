@@ -48,4 +48,8 @@ public class ImageProperties {
         this.height = height;
     }
 
+    @Override
+    public String toString() {
+        return "ImageProperties{ width=" + width + ", height=" + height + '}';
+    }
 }

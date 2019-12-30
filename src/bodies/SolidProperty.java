@@ -15,7 +15,7 @@ import static java.lang.Math.abs;
 public class SolidProperty {
 
     private float roughness = 1;
-    private int elasticity = 0;
+    private float elasticity = 0;
     private float mass = 1;
 
     public float getRoughness() {
@@ -26,11 +26,11 @@ public class SolidProperty {
         this.roughness = roughness;
     }
 
-    public int getElasticity() {
+    public float getElasticity() {
         return elasticity;
     }
 
-    public void setElasticity(int elasticity) {
+    public void setElasticity(float elasticity) {
         this.elasticity = elasticity;
     }
     

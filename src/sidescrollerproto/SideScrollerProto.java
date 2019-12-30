@@ -15,6 +15,7 @@ import editor.controller.entityClickers.EntityClicker;
 import editor.controller.ShapeCreator;
 import editor.controller.entityClickers.ClickableCanvas;
 import editor.controller.entityClickers.EditorEntityClicker;
+import editor.predefinedObjects.GamePredefinedObjects;
 import editor.tool.EditorButton;
 import editor.tool.RectangleTool;
 import editor.tool.Tool;
@@ -58,7 +59,7 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
         HEIGHT = screenSize.height;
     }
     //*/
-    private static final int SCALE = 3;
+    private static final int SCALE = 2;
     private static final String NAME = "Sidescroller Game";
     private JFrame frame;
     private boolean running = false;
@@ -95,6 +96,7 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
         try {
             GameImages.loadAllImages();
             GameAnimations.LoadAllAnimations();
+            GamePredefinedObjects.loadPredefinedObjects();
         } catch (IOException e) {
             System.out.println("error huge");
         }
@@ -241,7 +243,7 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
             }
             if (System.currentTimeMillis() - lastTimer >= 1000) {
                 lastTimer += 1000;
-                //System.out.println(frames + "," + ticks);
+                System.out.println(frames + "," + ticks);
                 frames = 0;
                 ticks = 0;
             }
@@ -333,7 +335,6 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
         g2d.setColor(Color.black);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
-        
         double x = WIDTH * SCALE / 2 + mainCamera.getZoom() * (0 - mainCamera.getxPos() - 1 * GameImages.getImage("guy.png").getWidth(this) / 2);
         double y = HEIGHT * SCALE / 2 + mainCamera.getZoom() * (0 - mainCamera.getyPos() - 1 * GameImages.getImage("guy.png").getHeight(this) / 2);
         double scale = (double) mainCamera.getZoom() * 1;
@@ -343,12 +344,15 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
         af.scale(scale, scale);//*/
         af.rotate(rotation,/*0/**/ GameImages.getImage("guy.png").getWidth(this) / 2 /**/, /*0/**/ GameImages.getImage("guy.png").getHeight(this) / 2 /**/);
         g2d.drawImage(GameImages.getImage("guy.png"), af, null);
-        
-        
+
         //g2d.drawImage(GameImages.getGuy(), 0, 0, getWidth(), getHeight(), this);
         for (GameShape entity : entities) {
             if (entity.getObjectImage() != null) {
                 Image image = entity.getObjectImage();
+                double x2 = WIDTH * SCALE / 2 + entity.getParalax() * mainCamera.getZoom() * (entity.getX() - mainCamera.getxPos() - entity.getScale() * entity.getImageProperties().getWidth() / 2);;
+                double y2 = HEIGHT * SCALE / 2 + entity.getParalax() * mainCamera.getZoom() * (entity.getY() - mainCamera.getyPos() - entity.getScale() * entity.getImageProperties().getHeight() / 2);
+                double scale2 = (double) mainCamera.getZoom() * entity.getScale();
+                double rotation2 = Math.toRadians(entity.getRotation());
                 if (entity.getBody() != null) {
                     Body body = entity.getBody();
                     if (body instanceof MovingBody) {
@@ -357,15 +361,15 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
                         } else if (mBody.getFallingAnimation() != null && mBody.isFalling()) {
                         } else if (mBody.getStandingAnimation() != null && mBody.isStill()) {
                             image = mBody.getStandingAnimation().getImage();
+                            x2 += entity.getParalax() * mainCamera.getZoom() * body.getStandingAnimation().getxOffset();
+                            y2 += entity.getParalax() * mainCamera.getZoom() * body.getStandingAnimation().getyOffset();
                         }
                     } else if (body.getStandingAnimation() != null) {
                         image = body.getStandingAnimation().getImage();
+                        x2 += entity.getParalax() * mainCamera.getZoom() * body.getStandingAnimation().getxOffset();
+                        y2 += entity.getParalax() * mainCamera.getZoom() * body.getStandingAnimation().getyOffset();
                     }
                 }
-                double x2 = WIDTH * SCALE / 2 + entity.getParalax() * mainCamera.getZoom() * (entity.getX() - mainCamera.getxPos() - entity.getScale()*entity.getImageProperties().getWidth()/ 2);;
-                double y2 = HEIGHT * SCALE / 2 + entity.getParalax() * mainCamera.getZoom() * (entity.getY() - mainCamera.getyPos() - entity.getScale() * entity.getImageProperties().getHeight() / 2);
-                double scale2 = (double) mainCamera.getZoom() * entity.getScale();
-                double rotation2 = Math.toRadians(entity.getRotation());
                 AffineTransform af2 = AffineTransform.getTranslateInstance(x2, y2);
                 //AffineTransform af2 = AffineTransform.getTranslateInstance(100, 100);
                 //System.out.println(entity.getImageProperties().getWidth()+" "+entity.getImageProperties().getHeight()+" "+(image == null));
@@ -374,7 +378,10 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
                 af2.rotate(rotation2, image.getWidth(this) / 2, image.getHeight(this) / 2);
                 g2d.drawImage(image, af2, null);
             }
-            entity.draw(g2d);
+            System.out.println(entity.toString());
+            if (!testMovements) {
+                entity.draw(g2d);
+            }
         }
 
         g.dispose();
@@ -430,6 +437,10 @@ public class SideScrollerProto extends Canvas implements Runnable, ClickableCanv
 
     public static SideScrollerProto getCurrentInstance() {
         return currentInstance;
+    }
+
+    public void addBody(Body body) {
+        gameBodies.add(body);
     }
 
 }

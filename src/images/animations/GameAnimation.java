@@ -11,6 +11,8 @@ package images.animations;
  */
 public class GameAnimation {
     private Animation animation;
+    private int animationXOffset;
+    private int animationYOffset;
     private String Name;
 
     public GameAnimation(Animation animation, String Name) {
@@ -24,8 +26,23 @@ public class GameAnimation {
     public GameAnimation(Animation animation) {
         this.animation = animation;
     }
-    
 
+    public int getAnimationXOffset() {
+        return animationXOffset;
+    }
+
+    public void setAnimationXOffset(int animationXOffset) {
+        this.animationXOffset = animationXOffset;
+    }
+
+    public int getAnimationYOffset() {
+        return animationYOffset;
+    }
+
+    public void setAnimationYOffset(int animationYOffset) {
+        this.animationYOffset = animationYOffset;
+    }
+    
     public Animation getAnimation() {
         return animation;
     }

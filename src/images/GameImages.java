@@ -269,4 +269,8 @@ public class GameImages {
         }
         return null;
     }
+
+    public static String getImageName(String guypng) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

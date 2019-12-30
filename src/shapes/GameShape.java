@@ -6,7 +6,6 @@
 package shapes;
 
 import bodies.Body;
-import bodies.MovingBody;
 import images.GameImages;
 import images.ImageProperties;
 import java.awt.Color;
@@ -33,7 +32,7 @@ public abstract class GameShape implements Drawable, Clickable {
         position = new Point(x, y);
         this.width = width;
         this.height = height;
-        scale = 100;
+        scale = 1;
         rotation = 0;
         paralax = 1;
         imageProperties = new ImageProperties();
@@ -119,7 +118,7 @@ public abstract class GameShape implements Drawable, Clickable {
         setObjectImage(GameImages.getImage(name));
     }
 
-    protected void setObjectImage(Image image) {
+    public void setObjectImage(Image image) {
         imageProperties.setImage(image);
         imageProperties.setWidth(getObjectImage().getWidth(SideScrollerProto.getCurrentInstance()));
         imageProperties.setHeight(getObjectImage().getHeight(SideScrollerProto.getCurrentInstance()));
@@ -171,6 +170,8 @@ public abstract class GameShape implements Drawable, Clickable {
         returnShape.setY(getY());
         returnShape.setWidth(width);
         returnShape.setHeight(height);
+        returnShape.getImageProperties().setHeight(getImageProperties().getHeight());
+        returnShape.getImageProperties().setWidth(getImageProperties().getWidth());
         returnShape.setRotation(rotation);
         returnShape.setParalax(paralax);
         returnShape.setScale(scale);
@@ -239,4 +240,11 @@ public abstract class GameShape implements Drawable, Clickable {
         int y = (int) ((x * m1) + n1);
         return new Point(x, y);
     }
+
+    @Override
+    public String toString() {
+        return "GameShape{" + "color=" + color + ", position=" + position + ", width=" + width + ", height=" + height + ", rotation=" + rotation + ", imageProperties=" + imageProperties + ", scale=" + scale + ", paralax=" + paralax + ", body=" + body + '}';
+    }
+    
+    
 }

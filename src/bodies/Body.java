@@ -72,4 +72,9 @@ public class Body {
     public Body copy(GameShape shapeOfBody) {
         return copyInto(new Body(shapeOfBody));
     }
+
+    @Override
+    public String toString() {
+        return "Body{ solidity=" + solidity + ", standingAnimation=" + standingAnimation + '}';
+    }
 }
