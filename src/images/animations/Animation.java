@@ -19,6 +19,7 @@ public class Animation {
     private int y;
     private int xOffset;
     private int yOffset;
+    private int[][] offsetMatrix;
     private final BufferedImage[] images;
     private Image backgroundImage;
     private float imageSize;
@@ -32,7 +33,7 @@ public class Animation {
     private final int[][] lapTimes;
     private boolean ended;
 
-    public Animation(final BufferedImage[] parImages, final int[][] pLapTimes) {
+    public Animation(final BufferedImage[] parImages, final int[][] pLapTimes, final int[][] offsetMatrix) {
         images = parImages;
         spriteAmount = parImages.length;
         lapTimes = pLapTimes;
@@ -43,6 +44,18 @@ public class Animation {
         imageSize = 1;
         backgroundImage = null;
         backgroundSize = 1;
+        if (offsetMatrix == null) {
+            this.offsetMatrix = new int[2][spriteAmount];
+        } else {
+            //System.out.println("offset is not null");
+            this.offsetMatrix = offsetMatrix;
+        }
+
+    }
+
+    //REMOVE ME
+    public int getCurrent() {
+        return current;
     }
 
     public int getX() {
@@ -62,7 +75,7 @@ public class Animation {
     }
 
     public int getxOffset() {
-        return xOffset;
+        return offsetMatrix[0][lapTimes[1][current]];
     }
 
     public void setxOffset(int xOffset) {
@@ -70,7 +83,7 @@ public class Animation {
     }
 
     public int getyOffset() {
-        return yOffset;
+        return offsetMatrix[1][lapTimes[1][current]];
     }
 
     public void setyOffset(int yOffset) {
@@ -124,12 +137,14 @@ public class Animation {
     public BufferedImage getImage() {
         return images[lapTimes[1][current]];
     }
-    
-    public Image getFirstImage()
-    {
+
+    public Image getFirstImage() {
         return images[0];
     }
-    
+
+    public Image getSpecificImage(int i) {
+        return images[i];
+    }
 
     public void tickAnimation() {
         lapCount++;
@@ -148,7 +163,7 @@ public class Animation {
     }
 
     public Animation cloneAnimation() {
-        Animation clone = new Animation(images, lapTimes);
+        Animation clone = new Animation(images, lapTimes, offsetMatrix);
         clone.setxOffset(xOffset);
         clone.setyOffset(yOffset);
         return clone;

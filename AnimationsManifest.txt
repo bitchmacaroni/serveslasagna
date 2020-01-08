@@ -4,20 +4,21 @@ Properties
 yOffset 10
 end
 
+
 main_idle_010.gif
 gifAnimation
 Properties
-yOffset -40
+yOffset -60
 end
 
 main_run_013.gif
 gifAnimation
 Properties
-yOffset -40
+yOffset -70
 end
 
 main_walk_015.gif
 gifAnimation
 Properties
-yOffset -40
+yOffset -70
 end

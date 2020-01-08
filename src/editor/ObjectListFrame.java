@@ -197,13 +197,12 @@ public class ObjectListFrame extends Canvas implements Runnable, ClickableCanvas
         for (GameShape entity : entities) {
             if (entity.getObjectImage() != null) {
                 Image image = entity.getObjectImage();
-                double x2 = WIDTH / 2 + entity.getParalax()  * (entity.getX()  - entity.getScale() * entity.getWidth() / 2);
-                double y2 = HEIGHT / 2 + entity.getParalax()  * (entity.getY() - mouseWheel - entity.getScale() * entity.getHeight() / 2);
+                double x2 = WIDTH / 2 + entity.getParalax()  * (entity.getX()  -  entity.getWidth() / 2);
+                double y2 = HEIGHT / 2 + entity.getParalax()  * (entity.getY() - mouseWheel -  entity.getHeight() / 2);
                 
-                double scale2 = (double) entity.getScale();
                 double rotation2 = Math.toRadians(entity.getRotation());
                 AffineTransform af2 = AffineTransform.getTranslateInstance(x2, y2);
-                af2.scale(scale2 * entity.getWidth() / image.getWidth(this), scale2 * entity.getHeight() / image.getHeight(this));
+                af2.scale((float)entity.getWidth() / image.getWidth(this),(float)entity.getHeight() / image.getHeight(this));
                 af2.rotate(rotation2, image.getWidth(this) / 2, image.getHeight(this) / 2);
                 g2d.drawImage(image, af2, null);
                 //System.out.println(entity.toString());

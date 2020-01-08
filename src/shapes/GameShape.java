@@ -23,7 +23,8 @@ public abstract class GameShape implements Drawable, Clickable {
     protected int width, height;
     private float rotation;
     private ImageProperties imageProperties;
-    private float scale;
+    private float scaleY;
+    private float scaleX;
     private float paralax;
     Body body = null;
 
@@ -32,7 +33,8 @@ public abstract class GameShape implements Drawable, Clickable {
         position = new Point(x, y);
         this.width = width;
         this.height = height;
-        scale = 1;
+        scaleX = 1;
+        scaleY = 1;
         rotation = 0;
         paralax = 1;
         imageProperties = new ImageProperties();
@@ -132,14 +134,24 @@ public abstract class GameShape implements Drawable, Clickable {
         this.paralax = paralax;
     }
 
-    public float getScale() {
-        return scale;
+    public float getScaleY() {
+        return scaleY;
     }
 
-    public void setScale(float scale) {
-        this.scale = scale;
+    public void setScaleY(float scale) {
+        this.scaleY = scale;
     }
 
+    public float getScaleX() {
+        return scaleX;
+    }
+
+    public void setScaleX(float scaleX) {
+        this.scaleX = scaleX;
+    }
+    
+    
+    
     // --- Utility Meth ---
     public int getMaxX() {
         return position.getX() + (width / 2);
@@ -170,14 +182,16 @@ public abstract class GameShape implements Drawable, Clickable {
         returnShape.setY(getY());
         returnShape.setWidth(width);
         returnShape.setHeight(height);
-        returnShape.getImageProperties().setHeight(getImageProperties().getHeight());
-        returnShape.getImageProperties().setWidth(getImageProperties().getWidth());
+        
         returnShape.setRotation(rotation);
         returnShape.setParalax(paralax);
-        returnShape.setScale(scale);
+        returnShape.setScaleY(scaleY);
+        returnShape.setScaleX(scaleX);
         if (getObjectImage() != null) {
             returnShape.setObjectImage(getObjectImage());
         }
+        returnShape.getImageProperties().setHeight(getImageProperties().getHeight());
+        returnShape.getImageProperties().setWidth(getImageProperties().getWidth());
         if (body != null) {
             returnShape.setBody(body.copy(returnShape));
         }
@@ -243,7 +257,7 @@ public abstract class GameShape implements Drawable, Clickable {
 
     @Override
     public String toString() {
-        return "GameShape{" + "color=" + color + ", position=" + position + ", width=" + width + ", height=" + height + ", rotation=" + rotation + ", imageProperties=" + imageProperties + ", scale=" + scale + ", paralax=" + paralax + ", body=" + body + '}';
+        return "GameShape{" + "color=" + color + ", position=" + position + ", width=" + width + ", height=" + height + ", rotation=" + rotation + ", imageProperties=" + imageProperties + ", scale=" + scaleY + ", paralax=" + paralax + ", body=" + body + '}';
     }
     
     

@@ -26,7 +26,9 @@ import org.w3c.dom.NodeList;
  * @author christian
  */
 public class AnimationMaker {
+
     private BufferedImage[] imageSet;
+    private int[][] offsetsMatrix;
     private String name;
     private int spriteAmount = -1;
     private int xBorderLimit = -1;
@@ -35,6 +37,10 @@ public class AnimationMaker {
     private int columnas = 1;
 
     public AnimationMaker() {
+    }
+
+    public int[][] getOffsetsMatrix() {
+        return offsetsMatrix;
     }
 
     public AnimationMaker withSprites(int amount) {
@@ -121,7 +127,7 @@ public class AnimationMaker {
         return imageSet;
     }
 
-    public static BufferedImage[] readGifAnimation(String name) {
+    public BufferedImage[] readGifAnimation(String name) {
         BufferedImage[] images = null;
         try {
             String[] imageatt = new String[]{
@@ -138,6 +144,9 @@ public class AnimationMaker {
             int noi = reader.getNumImages(true);
             BufferedImage master = null;
             images = new BufferedImage[noi - 1];
+            offsetsMatrix = new int[2][noi - 1];
+            System.out.println(name);
+            int xDisplacement = 0;
 
             for (int i = 0; i < noi; i++) {
                 BufferedImage image = reader.read(i);
@@ -151,28 +160,112 @@ public class AnimationMaker {
 
                     if (nodeItem.getNodeName().equals("ImageDescriptor")) {
                         Map<String, Integer> imageAttr = new HashMap<String, Integer>();
-
                         for (int k = 0; k < imageatt.length; k++) {
                             NamedNodeMap attr = nodeItem.getAttributes();
                             Node attnode = attr.getNamedItem(imageatt[k]);
                             imageAttr.put(imageatt[k], Integer.valueOf(attnode.getNodeValue()));
                         }
-                        if (i == 0) {
-                            master = new BufferedImage(imageAttr.get("imageWidth"), imageAttr.get("imageHeight"), BufferedImage.TYPE_INT_ARGB);
+                        if (i == 1) {
+                            //master = new BufferedImage(imageAttr.get("imageWidth"), imageAttr.get("imageHeight"), BufferedImage.TYPE_INT_ARGB);
+                            xDisplacement =  imageAttr.get("imageLeftPosition")+image.getWidth()/2;
+                            
                         }
-                        master.getGraphics().drawImage(image, imageAttr.get("imageLeftPosition"), imageAttr.get("imageTopPosition"), null);
+                        if (i > 0) {
+                            //System.out.println("added "+imageAttr.get("imageLeftPosition")+" for number "+(i-1));
+                            offsetsMatrix[0][i-1] = imageAttr.get("imageLeftPosition") - xDisplacement;
+                            offsetsMatrix[1][i-1] = imageAttr.get("imageTopPosition");
+                        }
+                        //System.out.println(imageAttr.get("imageWidth"));
+                        //master.getGraphics().drawImage(image, imageAttr.get("imageLeftPosition"), imageAttr.get("imageTopPosition"), null);
                     }
                 }
                 //ImageIO.write(image, "GIF", new File(i + ".gif"));
                 if (i > 0) {
-                    images[i - 1] = image;
+                    //System.out.println("new test: " + name);
+
+                    images[i - 1] = trimAnimation(image);
+                    //System.out.println("\n\n\n");
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        System.out.println("image count: " + images.length);
+        //System.out.println("image count: " + images.length);
         return images;
     }
+
+    private static BufferedImage trimAnimation(BufferedImage image) {
+
+        int newMaxY = image.getTileHeight();
+        boolean foundNonTransparent = false;
+        seeker:
+        while (!foundNonTransparent) {
+            for (int i = 0; i < image.getTileWidth(); i++) {
+                //System.out.println("Elements "+(newMax-1)+" "+i);
+                int rgb = image.getRGB(i, newMaxY - 1);
+                if ((rgb | 0xFF000000) != 0xFF000000) {
+                    foundNonTransparent = true;
+                    break seeker;
+                }
+            }
+            //System.out.println("line "+newMax+" is not transparent "+foundNonTransparent);
+            newMaxY--;
+        }
+
+        int newMinY = 0;
+        foundNonTransparent = false;
+        seeker:
+        while (!foundNonTransparent) {
+            for (int i = 0; i < image.getTileWidth(); i++) {
+                //System.out.println("Elements "+(newMax-1)+" "+i);
+                int rgb = image.getRGB(i, newMinY);
+                if ((rgb | 0xFF000000) != 0xFF000000) {
+                    foundNonTransparent = true;
+                    break seeker;
+                }
+            }
+            //System.out.println("line "+newMax+" is not transparent "+foundNonTransparent);
+            newMinY++;
+        }
+
+        int newMaxX = image.getTileWidth();
+        foundNonTransparent = false;
+        seeker:
+        while (!foundNonTransparent) {
+            for (int i = 0; i < image.getTileHeight(); i++) {
+                int rgb = image.getRGB(newMaxX - 1, i);
+                if ((rgb | 0xFF000000) != 0xFF000000) {
+                    foundNonTransparent = true;
+                    break seeker;
+                }
+            }
+            newMaxX--;
+        }
+
+        int newMinX = 0;
+        foundNonTransparent = false;
+        seeker:
+        while (!foundNonTransparent) {
+            for (int i = 0; i < image.getTileHeight(); i++) {
+                //System.out.println("Elements "+(newMax-1)+" "+i);
+                int rgb = image.getRGB(newMinX, i);
+                if ((rgb | 0xFF000000) != 0xFF000000) {
+                    foundNonTransparent = true;
+                    break seeker;
+                }
+            }
+            newMinX++;
+        }
+        //System.out.println("initial values: " + image.getTileWidth() + " " + image.getTileHeight());
+        //System.out.println("(" + newMinX + "," + newMinY + ")" + "(" + newMaxX + "," + newMaxY + ")");
+
+        BufferedImage newImage = new BufferedImage(newMaxX - newMinX, newMaxY - newMinY, image.getType());
+        Graphics2D gr = newImage.createGraphics();
+        //gr.drawImage(image, 0, 0, newMaxX - newMinX, newMaxY - newMinY, newMinX, newMinY, newMaxX-1, newMaxY-1, null);
+        gr.dispose();
+
+        return image;//image.getSubimage(newMinX, newMinY, newMaxX-newMinX, newMaxY-newMinY);
+    }
+
 }

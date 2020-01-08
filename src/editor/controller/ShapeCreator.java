@@ -32,7 +32,7 @@ public class ShapeCreator {
         originalY = mousePos.getY();
         shape = this.getShapeFromTool(tool,Camera.getXReferenceFromScreen(originalX),Camera.getYReferenceFromScreen(originalY));
         shape.setObjectImage("guy.png");
-        shape.setScale(1);
+        shape.setScaleX(1);
         shape.setColor(Color.RED);
         shapes.add(shape);
         released = false;

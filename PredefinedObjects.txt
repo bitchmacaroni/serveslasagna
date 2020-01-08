@@ -9,14 +9,19 @@ end
 
 object: rectangleshape
 width 70
-height 200
+height 140
 image animation:main_idle_010.gif
-imagewidth 70
-imageheight 200
 movingbody:
 standinganimation main_idle_010.gif
 movinganimation main_walk_015.gif
-gravityon
-
 endbody
+end
+
+object: rectangleshape
+width 700
+height 140
+image metalTile.png
+body:
+endbody
+fixImage
 end

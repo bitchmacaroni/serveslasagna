@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Scanner;
 import shapes.GameShape;
 import shapes.RectangleShape;
+import sidescrollerproto.SideScrollerProto;
 
 /**
  *
@@ -41,7 +42,7 @@ public class ShapeReader {
             }
             shapeType = reader.next();
         }
-        
+
         switch (shapeType.toLowerCase()) {
             case "rectangleshape":
                 shape = new RectangleShape(Color.yellow, 0, 0, 0, 0);
@@ -89,7 +90,7 @@ public class ShapeReader {
                     String imageWidth = reader.next();
                     try {
                         shape.getImageProperties().setWidth(Integer.parseInt(imageWidth));
-                        System.out.println("Property width: "+shape.getImageProperties().getWidth());
+                        System.out.println("Property width: " + shape.getImageProperties().getWidth());
                     } catch (NumberFormatException e) {
                         System.out.println("Error parsing imageWidth \"" + imageWidth + "\" to int");
                     }
@@ -102,7 +103,7 @@ public class ShapeReader {
                     String imageHeight = reader.next();
                     try {
                         shape.getImageProperties().setHeight(Integer.parseInt(imageHeight));
-                        System.out.println("Property height: "+shape.getImageProperties().getHeight());
+                        System.out.println("Property height: " + shape.getImageProperties().getHeight());
                     } catch (NumberFormatException e) {
                         System.out.println("Error parsing imageHeight \"" + imageHeight + "\" to int");
                     }
@@ -131,16 +132,28 @@ public class ShapeReader {
                         System.out.println("Error parsing paralax \"" + paralax + "\" to float");
                     }
                     break;
-                case "scale":
+                case "scaleX":
                     if (!reader.hasNext()) {
-                        System.out.println("scale attribute not defined, skipping to next object");
+                        System.out.println("scaleX attribute not defined, skipping to next object");
                         return null;
                     }
-                    String scale = reader.next();
+                    String scaleX = reader.next();
                     try {
-                        shape.setScale(Float.parseFloat(scale));
+                        shape.setScaleX(Float.parseFloat(scaleX));
                     } catch (NumberFormatException e) {
-                        System.out.println("Error parsing scale \"" + scale + "\" to float");
+                        System.out.println("Error parsing scaleX \"" + scaleX + "\" to float");
+                    }
+                    break;
+                case "scaleY":
+                    if (!reader.hasNext()) {
+                        System.out.println("scaleY attribute not defined, skipping to next object");
+                        return null;
+                    }
+                    String scaleY = reader.next();
+                    try {
+                        shape.setScaleX(Float.parseFloat(scaleY));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error parsing scaleY \"" + scaleY + "\" to float");
                     }
                     break;
                 case "image":
@@ -160,6 +173,30 @@ public class ShapeReader {
                     } else {
                         shape.setObjectImage(image);
                         //shape.setObjectImage(GameImages.getImage("guy.png"));
+                    }
+                    break;
+                case "fixedimage":
+                case "fiximage":
+                    if (shape.getBody() != null) {
+                        if (shape.getObjectImage() != null) {
+                            int iw = shape.getObjectImage().getWidth(SideScrollerProto.getCurrentInstance());
+                            System.out.println("iw "+iw);
+                            System.out.println("image dimentions:"+(iw=shape.getObjectImage().getWidth(SideScrollerProto.getCurrentInstance()))+" "+shape.getObjectImage().getHeight(null));
+                            System.out.println("iw "+iw);
+                            shape.setScaleX(shape.getWidth()/shape.getObjectImage().getWidth(SideScrollerProto.getCurrentInstance()));
+                            shape.setScaleY(shape.getHeight()/shape.getObjectImage().getHeight(SideScrollerProto.getCurrentInstance()));
+                            System.out.println("shape dimentions:"+shape.getWidth()+" "+shape.getHeight());
+                            System.out.println("image dimentions:"+shape.getObjectImage().getWidth(SideScrollerProto.getCurrentInstance())+" "+shape.getObjectImage().getHeight(null));
+                            System.out.println("image dimentions:"+shape.getImageProperties().getWidth()+" "+shape.getImageProperties().getHeight());
+                            System.out.println("scale values: "+shape.getScaleX()+" "+shape.getScaleY());
+                            SideScrollerProto.dummyImage = shape.getObjectImage();
+                            System.out.println("dim "+SideScrollerProto.dummyImage.getWidth(SideScrollerProto.getCurrentInstance()));
+                            System.out.println("dim "+shape.getObjectImage().getWidth(SideScrollerProto.getCurrentInstance()));
+                        } else {
+                            System.out.println("can't fix image, object has no image.");
+                        }
+                    } else {
+                        System.out.println("can't fix image, object has no body.");
                     }
                     break;
                 case "body:":
@@ -277,7 +314,7 @@ public class ShapeReader {
                         if (movingAnimation == null) {
                             System.out.println("Warning, animation name \"" + movingAnimationName + "\" does not exist. Setting moving animation to null.");
                         } else {
-                            body.setStandingAnimation(movingAnimation);
+                            ((MovingBody) body).setMovingAnimation(movingAnimation);
                         }
                     }
                     break;
@@ -292,7 +329,7 @@ public class ShapeReader {
                         if (fallingAnimation == null) {
                             System.out.println("Warning, animation name \"" + fallingAnimationName + "\" does not exist. Setting falling animation to null.");
                         } else {
-                            body.setStandingAnimation(fallingAnimation);
+                            ((MovingBody) body).setFallingAnimation(fallingAnimation);
                         }
                     }
                     break;

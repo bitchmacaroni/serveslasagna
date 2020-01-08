@@ -14,8 +14,8 @@ import java.awt.Image;
 public class ImageProperties {
 
     private Image image;
-    private int width;
-    private int height;
+    private int width = 1;
+    private int height = 1;
 
     public Image getImage() {
         return image;

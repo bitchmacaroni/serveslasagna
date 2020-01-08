@@ -70,7 +70,7 @@ public class GameAnimations {
                                 switchOptions:
                                 switch (input.toLowerCase()) {
                                     case "gifanimation":
-                                        System.out.println("is gif!");
+                                        //System.out.println("is gif!");
                                         gifAnimation = true;
                                     case "timeframe":
                                         while (reader.hasNext()) {
@@ -220,9 +220,13 @@ public class GameAnimations {
                             }
                             if (timeFrame.size() == imageFrame.size() || imageFrame.isEmpty() || timeFrame.isEmpty()) {
                                 int[][] lapTimes = new int[2][];
+                                int[][] offsetMatrix = null;
                                 BufferedImage[] images;
                                 if (gifAnimation) {
-                                    images = AnimationMaker.readGifAnimation(animationSetName);
+                                    AnimationMaker aMaker = new AnimationMaker();
+                                    images = aMaker.readGifAnimation(animationSetName);
+                                    offsetMatrix = aMaker.getOffsetsMatrix();
+                                    
                                 } else {
                                     images = new AnimationMaker()
                                             .withName(animationSetName)
@@ -248,7 +252,7 @@ public class GameAnimations {
                                 lapTimes[1] = Arrays.stream(imageFrame.toArray(new Integer[imageFrame.size()]))
                                         .mapToInt(Integer::new)
                                         .toArray();
-                                Animation animation = new Animation(images, lapTimes);
+                                Animation animation = new Animation(images, lapTimes, offsetMatrix);
                                 animation.setxOffset(xOffset);
                                 animation.setyOffset(yOffset);
                                 animations.add(new GameAnimation(animation, animationSetName));
@@ -275,6 +279,15 @@ public class GameAnimations {
         for (GameAnimation animation : animations) {
             if (animation.getName().equals(name)) {
                 return animation.getAnimation().getFirstImage();
+            }
+        }
+        return null;
+    }
+    
+    public static Image getAnimationImage(String name, int i) {
+        for (GameAnimation animation : animations) {
+            if (animation.getName().equals(name)) {
+                return animation.getAnimation().getSpecificImage(i);
             }
         }
         return null;
